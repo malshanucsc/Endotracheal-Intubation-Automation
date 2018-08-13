@@ -115,9 +115,9 @@ def output_frame_details():
 if __name__ == "__main__":
 
   model_file = \
-    "C:/tmp/output_graph.pb"
+    "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_graph.pb"
 
-  label_file = "C:/tmp/output_labels.txt"
+  label_file = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_labels.txt"
   input_height = 224
   input_width = 224
   input_mean = 0
@@ -126,7 +126,7 @@ if __name__ == "__main__":
   output_layer = "final_result"
   graph = load_graph(model_file)
 
-  cap = cv2.VideoCapture(0)
+  cap = cv2.VideoCapture("E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sample_video.mp4")
     #"E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sample_video.mp4")
   count=0
 
@@ -135,12 +135,12 @@ if __name__ == "__main__":
 
     ret, img = cap.read()
     cv2.imshow("image", img)
-    print(datetime.datetime.time(datetime.datetime.now()))
+    #print(datetime.datetime.time(datetime.datetime.now()))
     output_frame_details()
     print(" ")
 
 
-    cv2.waitKey(1)
+    cv2.waitKey(5)
 
 
   #file_name = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/frame1008.jpg"
