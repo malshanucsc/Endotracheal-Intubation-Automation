@@ -301,8 +301,11 @@ def create_module_graph(module_spec):
       with fake quantization ops.
   """
   height, width = hub.get_expected_image_size(module_spec)
+
   with tf.Graph().as_default() as graph:
     resized_input_tensor = tf.placeholder(tf.float32, [None, height, width, 3])
+
+
     m = hub.Module(module_spec)
     bottleneck_tensor = m(resized_input_tensor)
     wants_quantization = any(node.op in FAKE_QUANT_OPS
@@ -404,6 +407,7 @@ def get_or_create_bottleneck(sess, image_lists, label_name, index, image_dir,
   ensure_dir_exists(sub_dir_path)
   bottleneck_path = get_bottleneck_path(image_lists, label_name, index,
                                         bottleneck_dir, category, module_name)
+
   if not os.path.exists(bottleneck_path):
     create_bottleneck_file(bottleneck_path, image_lists, label_name, index,
                            image_dir, category, sess, jpeg_data_tensor,
@@ -741,6 +745,7 @@ def add_final_retrain_ops(class_count, final_tensor_name, bottleneck_tensor,
     bottleneck input and ground truth input.
   """
   batch_size, bottleneck_tensor_size = bottleneck_tensor.get_shape().as_list()
+  #print(batch_size)
   assert batch_size is None, 'We want to work with arbitrary batch size.'
   with tf.name_scope('input'):
     bottleneck_input = tf.placeholder_with_default(
@@ -750,6 +755,7 @@ def add_final_retrain_ops(class_count, final_tensor_name, bottleneck_tensor,
 
     ground_truth_input = tf.placeholder(
         tf.int64, [batch_size], name='GroundTruthInput')
+
 
   # Organizing the following ops so they are easier to see in TensorBoard.
   layer_name = 'final_retrain_ops'
@@ -1043,6 +1049,7 @@ def main(_):
     else:
       # We'll make sure we've calculated the 'bottleneck' image summaries and
       # cached them on disk.
+
       cache_bottlenecks(sess, image_lists, FLAGS.image_dir,
                         FLAGS.bottleneck_dir, jpeg_data_tensor,
                         decoded_image_tensor, resized_image_tensor,
@@ -1317,7 +1324,7 @@ if __name__ == '__main__':
   parser.add_argument(
       '--tfhub_module',
       type=str,
-      default='https://tfhub.dev/google/imagenet/mobilenet_v2_100_224/feature_vector/1',
+      default='https://tfhub.dev/google/imagenet/mobilenet_v2_035_96/feature_vector/2',
       #default=('https://tfhub.dev/google/imagenet/inception_v3/feature_vector/1'),
       help="""\
       Which TensorFlow Hub module to use.

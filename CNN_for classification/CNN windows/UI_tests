@@ -1,0 +1,49 @@
+import sys
+from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtWidgets import QApplication, QDialog
+from PyQt5.uic import loadUi
+from PyQt5 import QtGui
+import numpy as np
+import cv2
+
+
+class Life2Coding(QDialog):
+    def __init__(self):
+        super(Life2Coding, self).__init__()
+        loadUi('1st_ui.ui', self)
+        self.setWindowTitle('Life2Coding PyQt5 GUI')
+        self.pushButton.clicked.connect(self.on_pushButton_clicked)
+
+    @pyqtSlot()
+    def on_pushButton_clicked(self):
+        cap = cv2.VideoCapture(0)
+
+        while (True):
+            # Capture frame-by-frame
+            ret, frame = cap.read()
+
+            # Our operations on the frame come here
+            # gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+            # Display the resulting frame
+            # cv2.imshow('frame',gray)
+
+
+            img = cv2.CvtColor(frame, cv2.COLOR_BGR2GRAY)
+            print("okay")
+            height, width, channel = img.shape
+            bytesPerLine = 3 * width
+            image_data = img.toString()
+
+            qImg = QtGui.QImage(image_data, width, height, bytesPerLine, QtGui.QImage.Format_RGB888)
+
+            self.label1.setPixmap(qImg)
+
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+
+
+app = QApplication(sys.argv)
+widget = Life2Coding()
+widget.show()
+sys.exit(app.exec_())

@@ -37,6 +37,7 @@ def load_graph(model_file):
 
 def read_tensor_from_image_file(img, input_height=299, input_width=299,input_mean=0, input_std=255):
   im = Image.fromarray(img)
+
   im.resize((input_height,input_width), Image.ANTIALIAS)
   image_array = np.array(im)[:, :, 0:3]  # Select RGB channels only.
   float_caster = tf.cast(image_array, tf.float32)
@@ -45,6 +46,8 @@ def read_tensor_from_image_file(img, input_height=299, input_width=299,input_mea
   normalized = tf.divide(tf.subtract(resized, [input_mean]), [input_std])
   sess = tf.Session()
   result = sess.run(normalized)
+  print(resized)
+
   return result
 
 """def read_tensor_from_image_file(file_name,
@@ -86,27 +89,33 @@ def load_labels(label_file):
   return label
 
 def output_frame_details():
+  #print(input_height)
   t = read_tensor_from_image_file(
     img,
     input_height=input_height,
     input_width=input_width,
     input_mean=input_mean,
     input_std=input_std)
-  # print(t)
-  # print(img)
+
+
 
   input_name = "import/" + input_layer
   output_name = "import/" + output_layer
 
+
   input_operation = graph.get_operation_by_name(input_name)
+  #print(input_operation)
   output_operation = graph.get_operation_by_name(output_name)
+
 
   with tf.Session(graph=graph) as sess:
     results = sess.run(output_operation.outputs[0], {
       input_operation.outputs[0]: t
     })
 
+
   results = np.squeeze(results)
+
 
   top_k = results.argsort()[-5:][::-1]
   labels = load_labels(label_file)
@@ -131,16 +140,26 @@ if __name__ == "__main__":
   count=0
 
   while (cap.isOpened()):
-    # Capture frame-by-frame
+    if(count%10==0):
+      ret, img = cap.read()
+      ###hei, wid = img.shape[:2]
+      #print(hei);
+      #print(wid);
+      cv2.imshow("image", img)
+      output_frame_details()
+      print(" ")
 
-    ret, img = cap.read()
-    cv2.imshow("image", img)
+      cv2.waitKey(1)
+
+    count += 1
+
+
+
     #print(datetime.datetime.time(datetime.datetime.now()))
-    output_frame_details()
-    print(" ")
 
 
-    cv2.waitKey(5)
+
+
 
 
   #file_name = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/frame1008.jpg"
