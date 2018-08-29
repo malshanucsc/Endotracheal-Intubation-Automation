@@ -32,8 +32,8 @@ class PhotoBoothApp:
 			"E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_graph.pb"
 
 		self.label_file = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_labels.txt"
-		self.input_height = 224
-		self.input_width = 224
+		self.input_height = 299
+		self.input_width = 299
 		self.input_mean = 0
 		self.input_std = 255
 		self.input_layer = "Placeholder"
@@ -75,10 +75,18 @@ class PhotoBoothApp:
 				# grab the frame from the video stream and resize it to
 				# have a maximum width of 300 pixels
 				self.frame = self.vs.read()
+				self.frame=self.frame[33:534, 126:581]
+
+				#cv2.imshow("haha",self.frame)
+				#self.bound = Bounds(l, t, l + w, t + h)
+				#imutils.crop(self.frame, *self._bound)
+				#print("done")
+				self.frame = imutils.resize(self.frame, width=400)
 				self.output_frame_details()
-				self.lbl.configure(text=self.queue.getMax())
+				if(self.queue.isEmpty()!=True):
+					self.lbl.configure(text=self.queue.getMax())
 				#print(self.queue.getMax())
-				self.frame = imutils.resize(self.frame, width=300)
+
 		
 				# OpenCV represents images in BGR order; however PIL
 				# represents images in RGB order, so we need to swap
@@ -173,8 +181,9 @@ class PhotoBoothApp:
 
 		top_k = results.argsort()[-5:][::-1]
 		labels = self.load_labels(self.label_file)
-		#print(top_k)
-		self.queue.enqueue(labels[top_k[0]])
+		print(labels[top_k[0]]+"  :  ",results[top_k[0]])
+		if(results[top_k[0]]>0.9):
+			self.queue.enqueue(labels[top_k[0]])
 		#for i in top_k:
 			#print(labels[i], results[i])
 
@@ -186,7 +195,7 @@ class CustomQueue:
         self.items = []
 
     def enqueue(self, item):
-        if (len(self.items) >= 20):
+        if (len(self.items) >= 5):
             self.items.pop(0)
             self.items.append(item)
         else:
@@ -204,4 +213,5 @@ class CustomQueue:
     def dequeue(self):
         return self.items.pop(0)
     def getMax(self):
+
         return max(self.items,key=self.items.count)
