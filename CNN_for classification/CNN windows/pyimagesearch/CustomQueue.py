@@ -21,4 +21,5 @@ class CustomQueue:
     def dequeue(self):
         return self.items.pop(0)
     def getMax(self):
+        print(self.items)
         return max(self.items,key=self.items.count)

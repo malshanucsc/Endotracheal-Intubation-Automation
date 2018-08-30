@@ -1324,8 +1324,8 @@ if __name__ == '__main__':
   parser.add_argument(
       '--tfhub_module',
       type=str,
-      default='https://tfhub.dev/google/imagenet/mobilenet_v2_035_96/feature_vector/2',
-      #default=('https://tfhub.dev/google/imagenet/inception_v3/feature_vector/1'),
+      #default='https://tfhub.dev/google/imagenet/mobilenet_v2_035_96/feature_vector/2',
+      default=('https://tfhub.dev/google/imagenet/inception_v3/feature_vector/1'),
       help="""\
       Which TensorFlow Hub module to use.
       See https://github.com/tensorflow/hub/blob/r0.1/docs/modules/image.md
