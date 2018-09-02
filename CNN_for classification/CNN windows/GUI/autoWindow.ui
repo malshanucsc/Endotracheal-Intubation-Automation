@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>732</width>
-    <height>476</height>
+    <height>552</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <property name="geometry">
      <rect>
       <x>500</x>
-      <y>60</y>
+      <y>110</y>
       <width>191</width>
       <height>51</height>
      </rect>
@@ -33,11 +33,11 @@
      <string>Start Process</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="btnStart_2">
+   <widget class="QPushButton" name="btnSave">
     <property name="geometry">
      <rect>
       <x>500</x>
-      <y>130</y>
+      <y>180</y>
       <width>191</width>
       <height>51</height>
      </rect>
@@ -52,11 +52,11 @@
      <string>Save Snapshot</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="btnStart_3">
+   <widget class="QPushButton" name="btnEnd">
     <property name="geometry">
      <rect>
       <x>500</x>
-      <y>230</y>
+      <y>440</y>
       <width>191</width>
       <height>51</height>
      </rect>
@@ -71,14 +71,33 @@
      <string>End Process</string>
     </property>
    </widget>
-   <widget class="QGraphicsView" name="graphicsView">
+   <widget class="QGraphicsView" name="displayContent">
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>40</y>
+      <y>110</y>
       <width>431</width>
       <height>381</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnStart_2">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>30</y>
+      <width>191</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Calibri</family>
+      <pointsize>13</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Configure Camera</string>
     </property>
    </widget>
   </widget>
