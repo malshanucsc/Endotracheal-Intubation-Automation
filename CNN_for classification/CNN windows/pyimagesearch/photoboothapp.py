@@ -81,7 +81,7 @@ class PhotoBoothApp:
 				#self.bound = Bounds(l, t, l + w, t + h)
 				#imutils.crop(self.frame, *self._bound)
 				#print("done")
-				self.frame = imutils.resize(self.frame, width=400)
+				#self.frame = imutils.resize(self.frame, width=400)
 				self.output_frame_details()
 				if(self.queue.isEmpty()!=True):
 					self.lbl.configure(text=self.queue.getMax())
@@ -182,7 +182,7 @@ class PhotoBoothApp:
 		top_k = results.argsort()[-5:][::-1]
 		labels = self.load_labels(self.label_file)
 		print(labels[top_k[0]]+"  :  ",results[top_k[0]])
-		if(results[top_k[0]]>0.9):
+		if(results[top_k[0]]>0.7):
 			self.queue.enqueue(labels[top_k[0]])
 		#for i in top_k:
 			#print(labels[i], results[i])

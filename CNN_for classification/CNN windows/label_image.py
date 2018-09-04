@@ -22,147 +22,220 @@ import datetime
 import numpy as np
 import tensorflow as tf
 import cv2
+import threading
+import time
 from PIL import Image
+count = 1
+class prediction:
+  def load_graph(self,model_file):
+    graph = tf.Graph()
+    graph_def = tf.GraphDef()
 
-def load_graph(model_file):
-  graph = tf.Graph()
-  graph_def = tf.GraphDef()
+    with open(model_file, "rb") as f:
+      graph_def.ParseFromString(f.read())
+    with graph.as_default():
+      tf.import_graph_def(graph_def)
 
-  with open(model_file, "rb") as f:
-    graph_def.ParseFromString(f.read())
-  with graph.as_default():
-    tf.import_graph_def(graph_def)
+    return graph
 
-  return graph
+  def read_tensor_from_image_file(self,img, input_height=299, input_width=299,input_mean=0, input_std=255):
+    im = Image.fromarray(img)
+    #im= im.convert('LA')
 
-def read_tensor_from_image_file(img, input_height=299, input_width=299,input_mean=0, input_std=255):
-  im = Image.fromarray(img)
+    im.resize((input_height, input_width), Image.ANTIALIAS)
 
-  im.resize((input_height,input_width), Image.ANTIALIAS)
-  image_array = np.array(im)[:, :, 0:3]  # Select RGB channels only.
-  float_caster = tf.cast(image_array, tf.float32)
-  dims_expander = tf.expand_dims(float_caster, 0);
-  resized = tf.image.resize_bilinear(dims_expander, [input_height, input_width])
-  normalized = tf.divide(tf.subtract(resized, [input_mean]), [input_std])
-  sess = tf.Session()
-  result = sess.run(normalized)
-  print(resized)
 
-  return result
+    image_array = np.array(im)[:, :, 0:3]  # Select RGB channels only.
+    #cv2.resize(img,(input_width,input_height))
+    #np.array(im)[:, :, 0:3]  # Select RGB channels only.
+    #print(image_array)
+    float_caster = tf.cast(image_array, tf.float32)
+    dims_expander = tf.expand_dims(float_caster, 0);
+    resized = tf.image.resize_bilinear(dims_expander, [input_height, input_width])
+    normalized = tf.divide(tf.subtract(resized, [input_mean]), [input_std])
+    sess = tf.Session()
+    result = sess.run(normalized)
+    #print(resized)
 
-"""def read_tensor_from_image_file(file_name,
-                                input_height=299,
-                                input_width=299,
-                                input_mean=0,
-                                input_std=255):
-  input_name = "file_reader"
-  output_name = "normalized"
-  file_reader = tf.read_file(file_name, input_name)
+    return result
 
-  if file_name.endswith(".png"):
-    image_reader = tf.image.decode_png(
-        file_reader, channels=3, name="png_reader")
-  elif file_name.endswith(".gif"):
-    image_reader = tf.squeeze(
-        tf.image.decode_gif(file_reader, name="gif_reader"))
-  elif file_name.endswith(".bmp"):
-    image_reader = tf.image.decode_bmp(file_reader, name="bmp_reader")
-  else:
-    image_reader = tf.image.decode_jpeg(
-        file_reader, channels=3, name="jpeg_reader")
-  #print(image_reader)
-  float_caster = tf.cast(image_reader, tf.float32)
-  dims_expander = tf.expand_dims(float_caster, 0)
-  resized = tf.image.resize_bilinear(dims_expander, [input_height, input_width])
-  normalized = tf.divide(tf.subtract(resized, [input_mean]), [input_std])
-  sess = tf.Session()
-  result = sess.run(normalized)
 
-  return result
-"""
+  def load_labels(self,label_file):
+    label = []
+    proto_as_ascii_lines = tf.gfile.GFile(label_file).readlines()
+    for l in proto_as_ascii_lines:
+      label.append(l.rstrip())
+    return label
 
-def load_labels(label_file):
-  label = []
-  proto_as_ascii_lines = tf.gfile.GFile(label_file).readlines()
-  for l in proto_as_ascii_lines:
-    label.append(l.rstrip())
-  return label
-
-def output_frame_details():
-  #print(input_height)
-  t = read_tensor_from_image_file(
-    img,
-    input_height=input_height,
-    input_width=input_width,
-    input_mean=input_mean,
-    input_std=input_std)
+  def output_frame_details(self):
+    #print(input_height)
+    t = self.read_tensor_from_image_file(
+      self.img,
+      input_height=self.input_height,
+      input_width=self.input_width,
+      input_mean=self.input_mean,
+      input_std=self.input_std)
 
 
 
-  input_name = "import/" + input_layer
-  output_name = "import/" + output_layer
+    input_name = "import/" + self.input_layer
+    output_name = "import/" + self.output_layer
 
 
-  input_operation = graph.get_operation_by_name(input_name)
-  #print(input_operation)
-  output_operation = graph.get_operation_by_name(output_name)
+    input_operation = self.graph.get_operation_by_name(input_name)
+    #print(input_operation)
+    output_operation = self.graph.get_operation_by_name(output_name)
 
 
-  with tf.Session(graph=graph) as sess:
-    results = sess.run(output_operation.outputs[0], {
-      input_operation.outputs[0]: t
-    })
+    with tf.Session(graph=self.graph) as sess:
+      results = sess.run(output_operation.outputs[0], {
+        input_operation.outputs[0]: t
+      })
 
 
-  results = np.squeeze(results)
+    results = np.squeeze(results)
 
 
-  top_k = results.argsort()[-5:][::-1]
-  labels = load_labels(label_file)
-  for i in top_k:
-    print(labels[i], results[i])
-if __name__ == "__main__":
+    top_k = results.argsort()[-5:][::-1]
+    labels = self.load_labels(self.label_file)
+    #time.sleep(0.001)
 
-  model_file = \
-    "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_graph.pb"
+  
+    same_prediction=False
+    highest_value_index=top_k[0]
+    original_highest_value_index=highest_value_index
+    if (highest_value_index == 1):
+      highest_value_index = 10
+    elif (highest_value_index == 0):
+      highest_value_index = 1
+    if(results[original_highest_value_index]>0.85):
 
-  label_file = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_labels.txt"
-  input_height = 224
-  input_width = 224
-  input_mean = 0
-  input_std = 255
-  input_layer = "Placeholder"
-  output_layer = "final_result"
-  graph = load_graph(model_file)
+      if((self.current_location+2== highest_value_index) or (self.current_location+1== highest_value_index) or (self.current_location-1 == highest_value_index)):
+        predicting_location = original_highest_value_index
+        self.current_location = highest_value_index
 
-  cap = cv2.VideoCapture("E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sample_video.mp4")
-    #"E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sample_video.mp4")
-  count=0
+      else:
+        same_prediction = True;
 
-  while (cap.isOpened()):
-    if(count%10==0):
-      ret, img = cap.read()
-      ###hei, wid = img.shape[:2]
-      #print(hei);
-      #print(wid);
-      cv2.imshow("image", img)
-      output_frame_details()
-      print(" ")
+    else:
+      same_prediction=True
+    #self.current_location=highest_value_index
+    current_index= self.current_location
+    if (self.current_location == 1):
+      current_index = 0
+    elif (self.current_location == 10):
+      current_index = 1
+    if(same_prediction):
+      predicting_location=current_index
 
+    #print("Current ", labels[predicting_location])
+    #print(labels[top_k[0]],results[top_k[0]])
+    #for i in top_k:
+      #print(labels[i], results[i])
+    #print(" ")
+    self.visualize_func(predicting_location);
+
+
+
+  def visualize_func(self,predicting_location):
+    file_name=predicting_location
+    if(predicting_location==0):
+      file_name=1
+    elif(predicting_location==1):
+      file_name=10
+    new_location="E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/locations/location"+str(file_name)+".jpg"
+    if(self.location!=new_location):
+      self.location_image=cv2.imread(new_location)
+      self.location = new_location
+
+
+    vis = np.vstack((self.img2, self.location_image))
+
+    write_name="Demo/"+str(self.count)+".jpg"
+    self.count+=1
+
+
+    cv2.imwrite(write_name, vis)
+    #time.sleep(0.001)
+
+  def readframe_func(self):
+
+
+
+    while (self.cap.isOpened()):
+      ret, self.img = self.cap.read()
+      #print(self.img)
+      self.img2 = self.img;
+
+      self.img = self.img[33:534, 126:581]
+      #time.sleep(1)
       cv2.waitKey(1)
+      self.output_frame_details();
 
-    count += 1
+      #print(" new frame")
+
+    #  cv2.waitKey(1)
+
+    #count += 1
+
+      # print(datetime.datetime.time(datetime.datetime.now()))
+
+      # file_name = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/frame1008.jpg"
+
+
+  def main(self):
 
 
 
-    #print(datetime.datetime.time(datetime.datetime.now()))
+    self.model_file = \
+      "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_graph.pb"
+    self.label_file = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_labels.txt"
+    self.input_height = 224
+    self.input_width = 224
+    self.input_mean = 0
+    self.input_std = 255
+    self.input_layer = "Placeholder"
+    self.output_layer = "final_result"
+    self.graph = self.load_graph(self.model_file)
+    self.current_location = 1
+    self.count=1
+    self.location=""
+
+
+    self.cap = cv2.VideoCapture("E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sample_video.mp4")
+        #"E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sample_video.mp4")
+    ret,self.img=self.cap.read()
+    self.img2=self.img;
+    self.location_image=self.img2
+
+    #self.read_frame_thread = threading.Thread(name="read_frame", target= self.readframe_func)
+    #self.read_frame_thread.setDaemon(True)
+    #self.read_frame_thread.start()
+    #self.prediction_thread = threading.Thread(name='prediction', target=self.output_frame_details)
+    #self.prediction_thread.setDaemon(True)
+    #self.prediction_thread.start()
+    #self.visualize_thread = threading.Thread(name="visualize", target=self.visualize_func )
+    #self.visualize_thread.setDaemon(True)
+    #self.visualize_thread.start()
+
+    while(True):
+      self.readframe_func();
+
+
+      #print(read_frame_thread.is_alive())
+      #print(prediction_thread.is_alive())
+      #print(visualize_thread.is_alive())
+      #print("  ")
+      #time.sleep(1)
+      #pass
 
 
 
 
 
+run = prediction()
+run.main()
 
-  #file_name = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/frame1008.jpg"
 
 
 
