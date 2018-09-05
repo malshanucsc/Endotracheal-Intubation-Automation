@@ -143,7 +143,7 @@ class prediction:
       file_name=1
     elif(predicting_location==1):
       file_name=10
-    new_location="E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/locations/location"+str(file_name)+".jpg"
+    new_location="/media/cola/EDU/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/locations/location"+str(file_name)+".jpg"
     if(self.location!=new_location):
       self.location_image=cv2.imread(new_location)
       self.location = new_location
@@ -171,6 +171,7 @@ class prediction:
       #time.sleep(1)
       cv2.waitKey(1)
       self.output_frame_details();
+      
 
       #print(" new frame")
 
@@ -188,8 +189,12 @@ class prediction:
 
 
     self.model_file = \
-      "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_graph.pb"
-    self.label_file = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_labels.txt"
+      "/media/cola/EDU/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_graph.pb"
+    self.label_file = "/media/cola/EDU/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_labels.txt"
+
+    #self.model_file = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_graph.pb"
+    #self.label_file = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_labels.txt"
+    
     self.input_height = 224
     self.input_width = 224
     self.input_mean = 0
@@ -200,13 +205,16 @@ class prediction:
     self.current_location = 1
     self.count=1
     self.location=""
+    #/media/cola/EDU
 
 
-    self.cap = cv2.VideoCapture("E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sample_video.mp4")
+    #self.cap = cv2.VideoCapture("E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sample_video.mp4")
+    self.cap = cv2.VideoCapture("/media/cola/EDU/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sample_video.mp4")
         #"E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sample_video.mp4")
     ret,self.img=self.cap.read()
     self.img2=self.img;
     self.location_image=self.img2
+    #/media/cola/EDU/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows
 
     #self.read_frame_thread = threading.Thread(name="read_frame", target= self.readframe_func)
     #self.read_frame_thread.setDaemon(True)
@@ -218,8 +226,8 @@ class prediction:
     #self.visualize_thread.setDaemon(True)
     #self.visualize_thread.start()
 
-    while(True):
-      self.readframe_func();
+    #while(True):
+    self.readframe_func();
 
 
       #print(read_frame_thread.is_alive())
