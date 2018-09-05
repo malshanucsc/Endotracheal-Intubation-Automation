@@ -143,7 +143,10 @@ class prediction:
       file_name=1
     elif(predicting_location==1):
       file_name=10
-    new_location="/media/cola/EDU/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/locations/location"+str(file_name)+".jpg"
+    new_location="E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/locations/location"+str(file_name)+".jpg"
+    #cb=cv2.imread(new_location)
+    #print(cb)
+    #cv2.imshow("image",cb)
     if(self.location!=new_location):
       self.location_image=cv2.imread(new_location)
       self.location = new_location
@@ -151,11 +154,12 @@ class prediction:
 
     vis = np.vstack((self.img2, self.location_image))
 
-    write_name="Demo/"+str(self.count)+".jpg"
+    write_name="Demo/frame3_"+str(self.count)+".jpg"
     self.count+=1
+    cv2.imshow("Prediction",vis)
 
 
-    cv2.imwrite(write_name, vis)
+    #cv2.imwrite(write_name, vis)
     #time.sleep(0.001)
 
   def readframe_func(self):
@@ -171,6 +175,7 @@ class prediction:
       #time.sleep(1)
       cv2.waitKey(1)
       self.output_frame_details();
+    self.cap.release()
       
 
       #print(" new frame")
@@ -188,12 +193,11 @@ class prediction:
 
 
 
-    self.model_file = \
-      "/media/cola/EDU/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_graph.pb"
-    self.label_file = "/media/cola/EDU/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_labels.txt"
+    #self.model_file = "/media/cola/EDU/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_graph.pb"
+    #self.label_file = "/media/cola/EDU/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_labels.txt"
 
-    #self.model_file = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_graph.pb"
-    #self.label_file = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_labels.txt"
+    self.model_file = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_graph.pb"
+    self.label_file = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_labels.txt"
     
     self.input_height = 224
     self.input_width = 224
@@ -209,11 +213,12 @@ class prediction:
 
 
     #self.cap = cv2.VideoCapture("E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sample_video.mp4")
-    self.cap = cv2.VideoCapture("/media/cola/EDU/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sample_video.mp4")
+    self.cap = cv2.VideoCapture("E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sample_video.mp4")
         #"E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sample_video.mp4")
     ret,self.img=self.cap.read()
     self.img2=self.img;
     self.location_image=self.img2
+    #cv2.imshow("iamge",self.location_image)
     #/media/cola/EDU/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows
 
     #self.read_frame_thread = threading.Thread(name="read_frame", target= self.readframe_func)
