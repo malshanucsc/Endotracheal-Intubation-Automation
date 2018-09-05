@@ -110,7 +110,7 @@ class prediction:
       highest_value_index = 1
     if(results[original_highest_value_index]>0.85):
 
-      if((self.current_location+2== highest_value_index) or (self.current_location+1== highest_value_index) or (self.current_location-1 == highest_value_index)):
+      if((self.current_location+1== highest_value_index) or (self.current_location-1 == highest_value_index)):
         predicting_location = original_highest_value_index
         self.current_location = highest_value_index
 
