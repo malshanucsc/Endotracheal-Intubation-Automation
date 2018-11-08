@@ -18,123 +18,239 @@ from __future__ import division
 from __future__ import print_function
 
 import argparse
-
+import datetime
 import numpy as np
 import tensorflow as tf
+import cv2
+import threading
+import time
+#import queue
+from PIL import Image
+import datetime
+import multiprocessing
+count = 1
 
 
-def load_graph(model_file):
-  graph = tf.Graph()
-  graph_def = tf.GraphDef()
+class prediction:
+    def load_graph(self, model_file):
+        graph = tf.Graph()
+        graph_def = tf.GraphDef()
 
-  with open(model_file, "rb") as f:
-    graph_def.ParseFromString(f.read())
-  with graph.as_default():
-    tf.import_graph_def(graph_def)
+        with open(model_file, "rb") as f:
+            graph_def.ParseFromString(f.read())
+        with graph.as_default():
+            tf.import_graph_def(graph_def)
 
-  return graph
+        return graph
 
+    def read_tensor_from_image_file(self, img, input_height=299, input_width=299, input_mean=0, input_std=255):
+        im = Image.fromarray(img)
+        # im= im.convert('LA')
 
-def read_tensor_from_image_file(file_name,
-                                input_height=299,
-                                input_width=299,
-                                input_mean=0,
-                                input_std=255):
-  input_name = "file_reader"
-  output_name = "normalized"
-  file_reader = tf.read_file(file_name, input_name)
-  if file_name.endswith(".png"):
-    image_reader = tf.image.decode_png(
-        file_reader, channels=3, name="png_reader")
-  elif file_name.endswith(".gif"):
-    image_reader = tf.squeeze(
-        tf.image.decode_gif(file_reader, name="gif_reader"))
-  elif file_name.endswith(".bmp"):
-    image_reader = tf.image.decode_bmp(file_reader, name="bmp_reader")
-  else:
-    image_reader = tf.image.decode_jpeg(
-        file_reader, channels=3, name="jpeg_reader")
-  float_caster = tf.cast(image_reader, tf.float32)
-  dims_expander = tf.expand_dims(float_caster, 0)
-  resized = tf.image.resize_bilinear(dims_expander, [input_height, input_width])
-  normalized = tf.divide(tf.subtract(resized, [input_mean]), [input_std])
-  sess = tf.Session()
-  result = sess.run(normalized)
+        im.resize((input_height, input_width), Image.ANTIALIAS)
 
-  return result
+        image_array = np.array(im)[:, :, 0:3]  # Select RGB channels only.
+        # cv2.resize(img,(input_width,input_height))
+        # np.array(im)[:, :, 0:3]  # Select RGB channels only.
+
+        float_caster = tf.cast(image_array, tf.float32)
+        dims_expander = tf.expand_dims(float_caster, 0);
+        resized = tf.image.resize_bilinear(dims_expander, [input_height, input_width])
+        normalized = tf.divide(tf.subtract(resized, [input_mean]), [input_std])
+        sess = tf.Session()
+        result = sess.run(normalized)
 
 
-def load_labels(label_file):
-  label = []
-  proto_as_ascii_lines = tf.gfile.GFile(label_file).readlines()
-  for l in proto_as_ascii_lines:
-    label.append(l.rstrip())
-  return label
+        return result
+
+    def load_labels(self, label_file):
+        label = []
+        proto_as_ascii_lines = tf.gfile.GFile(label_file).readlines()
+        for l in proto_as_ascii_lines:
+            label.append(l.rstrip())
+        return label
+
+    def output_frame_details(self,input_frame_queue,prediction_queue,visualize_queue):
+
+        self.model_file = "/media/cola/EDU/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN ubuntu implementation/tmp/output_graph.pb"
+        self.label_file = "/media/cola/EDU/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN ubuntu implementation/tmp/output_labels.txt"
+
+        self.input_height = 224
+        self.input_width = 224
+        self.input_mean = 0
+        self.input_std = 255
+        self.input_layer = "Placeholder"
+        self.output_layer = "final_result"
+        self.graph = self.load_graph(self.model_file)
+        self.current_location = 1
 
 
-if __name__ == "__main__":
-  file_name = "tensorflow/examples/label_image/data/grace_hopper.jpg"
-  model_file = \
-    "tensorflow/examples/label_image/data/inception_v3_2016_08_28_frozen.pb"
-  label_file = "tensorflow/examples/label_image/data/imagenet_slim_labels.txt"
-  input_height = 299
-  input_width = 299
-  input_mean = 0
-  input_std = 255
-  input_layer = "input"
-  output_layer = "InceptionV3/Predictions/Reshape_1"
 
-  parser = argparse.ArgumentParser()
-  parser.add_argument("--image", help="image to be processed")
-  parser.add_argument("--graph", help="graph/model to be executed")
-  parser.add_argument("--labels", help="name of file containing labels")
-  parser.add_argument("--input_height", type=int, help="input height")
-  parser.add_argument("--input_width", type=int, help="input width")
-  parser.add_argument("--input_mean", type=int, help="input mean")
-  parser.add_argument("--input_std", type=int, help="input std")
-  parser.add_argument("--input_layer", help="name of input layer")
-  parser.add_argument("--output_layer", help="name of output layer")
-  args = parser.parse_args()
+        while(True):
+            #print(self.prediction_queue.qsize(), "   ", self.visualize_queue.qsize())
 
-  if args.graph:
-    model_file = args.graph
-  if args.image:
-    file_name = args.image
-  if args.labels:
-    label_file = args.labels
-  if args.input_height:
-    input_height = args.input_height
-  if args.input_width:
-    input_width = args.input_width
-  if args.input_mean:
-    input_mean = args.input_mean
-  if args.input_std:
-    input_std = args.input_std
-  if args.input_layer:
-    input_layer = args.input_layer
-  if args.output_layer:
-    output_layer = args.output_layer
+            if(not (input_frame_queue.empty())):
+                #print("running prediction")
+                #print("predict start  ",datetime.datetime.now())
 
-  graph = load_graph(model_file)
-  t = read_tensor_from_image_file(
-      file_name,
-      input_height=input_height,
-      input_width=input_width,
-      input_mean=input_mean,
-      input_std=input_std)
+                duplicate_frame=input_frame_queue.get()
+                #print(duplicate_frame)
+                visualize_queue.put(duplicate_frame)
+                t = self.read_tensor_from_image_file(duplicate_frame,input_height=self.input_height,input_width=self.input_width,input_mean=self.input_mean,input_std=self.input_std)
 
-  input_name = "import/" + input_layer
-  output_name = "import/" + output_layer
-  input_operation = graph.get_operation_by_name(input_name)
-  output_operation = graph.get_operation_by_name(output_name)
+                input_name = "import/" + self.input_layer
+                output_name = "import/" + self.output_layer
 
-  with tf.Session(graph=graph) as sess:
-    results = sess.run(output_operation.outputs[0], {
-        input_operation.outputs[0]: t
-    })
-  results = np.squeeze(results)
+                input_operation = self.graph.get_operation_by_name(input_name)
 
-  top_k = results.argsort()[-5:][::-1]
-  labels = load_labels(label_file)
-  for i in top_k:
-    print(labels[i], results[i])
+                output_operation = self.graph.get_operation_by_name(output_name)
+
+                with tf.Session(graph=self.graph) as sess:
+                    results = sess.run(output_operation.outputs[0],{
+                        input_operation.outputs[0]: t})
+
+                results = np.squeeze(results)
+
+                top_k = results.argsort()[-5:][::-1]
+                labels = self.load_labels(self.label_file)
+                # time.sleep(0.001)
+
+                same_prediction = False
+                highest_value_index = top_k[0]
+                original_highest_value_index = highest_value_index
+                if (highest_value_index == 1):
+                    highest_value_index = 10
+                elif (highest_value_index == 0):
+                    highest_value_index = 1
+                if (results[original_highest_value_index] > 0.85):
+
+                    if ((self.current_location + 1 == highest_value_index) or (self.current_location - 1 == highest_value_index)):
+
+                        prediction_queue.put(original_highest_value_index)
+                        self.current_location = highest_value_index
+
+                    else:
+                        self.same_prediction = True;
+
+                else:
+                    self.same_prediction = True
+                # self.current_location=highest_value_index
+                current_index = self.current_location
+                if (self.current_location == 1):
+                    current_index = 0
+                elif (self.current_location == 10):
+                    current_index = 1
+                if (self.same_prediction):
+                    prediction_queue.put(current_index)
+
+                #print("predict end  ",datetime.datetime.now())
+
+            else:
+                print("waiting in prediction")
+                time.sleep(0.01);
+
+
+
+    def visualize_func(self,prediction_queue,visualize_queue):
+        self.location = ""
+        self.count = 1
+
+        while(True):
+
+
+            if((not prediction_queue.empty())and(not visualize_queue.empty())):
+                #time.sleep(0.1)
+
+                #print("running visualize")
+                #print("visualize start  ",datetime.datetime.now())
+
+
+                file_name = prediction_queue.get()
+                if (file_name == 0):
+                    file_name = 1
+                elif (file_name == 1):
+                    file_name = 10
+                new_location = "/media/cola/EDU/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN ubuntu implementation/locations/cropped_size/location" + str(
+                    file_name) + ".jpg"
+                # cb=cv2.imread(new_location)
+
+                # cv2.imshow("image",cb)
+                if (self.location != new_location):
+                    self.location_image = cv2.imread(new_location)
+                    self.location = new_location
+
+
+                vis = np.vstack((visualize_queue.get(), self.location_image))
+
+                write_name = "Demo/frame3_" + str(self.count) + ".jpg"
+                self.count += 1
+                cv2.imshow("Video", vis)
+                cv2.waitKey(1)
+                #cv2.imwrite(write_name, vis)
+                #print("visualize end  ", datetime.datetime.now())
+
+            else:
+                print("waiting in visualize")
+
+
+
+    def readframe_func(self,input_frame_queue):
+        
+
+
+        cap = cv2.VideoCapture(
+            "/media/cola/EDU/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN ubuntu implementation/sample_video.mp4")
+        while(True):
+            #time.sleep(0.1)
+            #print("readframe start  ", datetime.datetime.now())
+            if (cap.isOpened()):
+
+                ret, self.img = cap.read()
+
+
+                self.img2 = self.img;
+
+                self.img = self.img[33:534, 126:581]
+
+                input_frame_queue.put(self.img)
+                #print("running input frame")
+
+            #print("readframe end  ", datetime.datetime.now())
+
+
+
+
+
+
+#        self.location_image = self.img2
+if __name__ == '__main__':
+
+    run = prediction()
+    
+
+    input_frame_queue = multiprocessing.Queue();
+    prediction_queue = multiprocessing.Queue();
+    visualize_queue = multiprocessing.Queue();
+
+    read_frame_process = multiprocessing.Process(target=run.readframe_func, args=(input_frame_queue,))
+    print(read_frame_process)
+
+    read_frame_process.start()
+    print(read_frame_process)
+
+    prediction_process = multiprocessing.Process(target=run.output_frame_details, args=(
+    input_frame_queue, prediction_queue, visualize_queue,))
+    print(prediction_process)
+    prediction_process.start()
+    print(prediction_process)
+    
+    visualize_process = multiprocessing.Process(target=run.visualize_func,
+                                                args=(prediction_queue, visualize_queue,))
+    print(visualize_process)
+    visualize_process.start()
+    print(visualize_process)
+
+###################################### cola rework
+
+
+####test pycharm integration with git
