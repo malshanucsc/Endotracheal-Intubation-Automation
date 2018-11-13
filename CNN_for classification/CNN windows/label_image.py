@@ -76,33 +76,33 @@ class prediction:
 
             if(new_location==2 or new_location==7):
                 #bend the  tube downward due to curves in the nasal  cavity and trachea
-                return "Move forward with downward thrust"
+                return 1
             elif(new_location==4):
                 #due to sensitivity in this area tracheal opening close and open quickly. waiting sometimes there will stabilize the opening
-                return "Wait for few seconds till location 4 is stable"
+                return 2
             elif(new_location==5):
                 #when tracheal openning closed it always tend to close it a obstacle is near the opening
-                return "Stop. Move 1cm back"
+                return 3
             elif (new_location == 8):
                 #reduce touching with wall of wind pipe spirals to reduce bleedings
-                return "Move center pixels towards black hole"
+                return 4
             elif (new_location == 9):
                 #if sped is high and miss the location 10 tube will move further and then it is difficult to capture due to locations beyond 10 is similar as 8-10
-                return "Move forward with extreme slow"
+                return 5
             elif(new_location==10):
                 #since intubation tube should stop 2cm above to spread air for both lungs
-                return "Stop move 2cm back"
+                return 6
             else:
-                return "Move forward"
+                return 7
 
 
 
         if (movement_type == "backward"):
             if (new_location == 2 or new_location == 7):
                 # bend the  tube upward due to curves in the nasal  cavity and trachea
-                return "Move backward with upward thrust"
+                return 8
             else:
-                return "Move backward"
+                return 9
 
 
 
@@ -177,19 +177,49 @@ class prediction:
             file_name = 1
         elif (predicting_location == 1):
             file_name = 10
-        print(self.getNextDirection(file_name,"forward"))
-        new_location = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/locations/location" + str(
+        direction_output=self.getNextDirection(file_name,"forward")
+
+        if(direction_output==1):
+            print("Move forward with downward thrust")
+        elif(direction_output==2):
+            print("Wait for few seconds till location 4 is stable")
+        elif(direction_output==3):
+            print("Stop. Move 1cm back")
+        elif(direction_output==4):
+            print("Move center pixels towards black hole")
+        elif(direction_output==5):
+            print("Move forward with extreme slow")
+        elif(direction_output==6):
+            print("Stop move 2cm back")
+        elif(direction_output==7):
+            print("Move forward")
+        elif(direction_output==8):
+            print("Move backward with upward thrust")
+        elif(direction_output==9):
+            print("Move backward")
+
+        new_direction = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/directions/" + str(direction_output) + ".jpg"
+
+        new_location = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/locations/new/" + str(
             file_name) + ".jpg"
         if (self.location != new_location):
             self.location_image = cv2.imread(new_location)
             self.location = new_location
 
-        vis = np.vstack((self.img2, self.location_image))
+        if (self.direction != direction_output):
+            self.direction_image = cv2.imread(new_direction)
+            self.direction = direction_output
 
-        write_name = "Demo/frame8_" + str(self.count) + ".jpg"
+        print(self.direction_image)
+        vis1=np.hstack((self.direction_image, self.location_image))
+
+        vis = np.vstack((self.img2, vis1))
+
+        write_name = str(self.count) + ".jpg"
         self.count += 1
 
-        cv2.imshow("Prediction",vis)#cv2.imwrite(write_name, vis)
+        #cv2.imshow("Prediction",vis)#
+        cv2.imwrite(write_name, vis)
         # time.sleep(0.001)
 
     def readframe_func(self):
@@ -232,6 +262,7 @@ class prediction:
         self.old_location_for_direction=1
         self.count = 1
         self.location = ""
+        self.direction = ""
         # /media/cola/EDU
 
         # self.cap = cv2.VideoCapture("E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sample_video.mp4")
