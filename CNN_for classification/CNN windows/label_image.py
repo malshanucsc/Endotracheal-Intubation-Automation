@@ -302,8 +302,8 @@ class prediction:
         write_name = "Demo/"+str(self.count) + ".jpg"
         self.count += 1
 
-        cv2.imshow("Prediction",self.img2)#
-        #cv2.imwrite(write_name, vis)
+        #cv2.imshow("Prediction",self.img2)#
+        cv2.imwrite(write_name, self.img2)
         # time.sleep(0.001)
 
     def readframe_func(self):
