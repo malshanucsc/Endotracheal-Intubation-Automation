@@ -25,6 +25,7 @@ import cv2
 import threading
 import time
 from PIL import Image
+import glob
 
 count = 1
 
@@ -179,7 +180,87 @@ class prediction:
             file_name = 10
         direction_output=self.getNextDirection(file_name,"forward")
 
-        if(direction_output==1):
+        #print(file_name)
+
+
+
+        for filename in glob.glob("surf_images/location"+str(file_name)+"/*.jpg"):
+
+
+            match_img = cv2.imread(filename,0)
+            #cv2.imshow("matching image",match_img)
+            kp1, des1 = self.surf.detectAndCompute(match_img, None)
+
+            temp_out_img = cv2.cvtColor(self.img2, cv2.COLOR_BGR2GRAY)
+
+            kp2, des2 = self.surf.detectAndCompute(temp_out_img, None)
+
+            FLANN_INDEX_KDTREE = 0
+            index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
+            search_params = dict(checks=50)
+
+            #bf = cv2.BFMatcher(cv2.NORM_L1, crossCheck=False)
+
+            #matches = bf.match(des1, des2)
+
+            flann = cv2.FlannBasedMatcher(index_params, search_params)
+
+            matches = flann.knnMatch(des1, des2, k=2)
+
+            #matches = sorted(matches, key=lambda x: x.distance)
+
+
+            good = []
+
+            for m, n in matches:
+                if m.distance < 0.8 * n.distance:
+                    good.append(m)
+            #print(len(matches))
+
+            if len(good) > 25:
+                src_pts = np.float32([kp1[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
+                dst_pts = np.float32([kp2[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
+
+                M, mask = cv2.findHomography(src_pts, dst_pts, 0, 5.0)
+
+                h, w = match_img.shape
+                pts = np.float32([[0, 0], [0, h - 1], [w - 1, h - 1], [w - 1, 0]]).reshape(-1, 1, 2)
+
+
+                dst = cv2.perspectiveTransform(pts, M)
+                #print(dst)
+                # h2,w2,g=self.img2.shape
+                # print(h2)
+                # print(w2)
+                # print(g)
+                #print(dst[0][0])
+                x=(dst[0][0][0]+dst[1][0][0]+dst[2][0][0]+dst[3][0][0])/4
+                y=(dst[0][0][1]+dst[1][0][1]+dst[2][0][1]+dst[3][0][1])/4
+
+                cv2.circle(self.img2, (np.int32(x), np.int32(y)), 10, (0, 0, 255), -1)
+
+                #cv2.line(self.img2, (dst[0][0][0],dst[0][0][1]), (dst[1][0][0],dst[1][0][1]), (0, 255, 0), 4);
+                #cv2.line(self.img2, (dst[1][0][0],dst[1][0][1]), (dst[2][0][0], dst[2][0][1]), (0, 255, 0), 4);
+                #cv2.line(self.img2, (dst[2][0][0], dst[2][0][1]), (dst[3][0][0], dst[3][0][1]), (0, 255, 0), 4);
+                #cv2.line(self.img2, (dst[3][0][0], dst[3][0][1]), (dst[0][0][0], dst[0][0][1]), (0, 255, 0), 4);
+
+                #line(image, scene_corners[1], scene_corners[2], Scalar(0, 255, 0), 4);
+
+                #line(image, scene_corners[2], scene_corners[3], Scalar(0, 255, 0), 4);
+
+                #line(image, scene_corners[3], scene_corners[0], Scalar(0, 255, 0), 4);
+
+
+
+                #self.img2 = cv2.polylines(self.img2, [np.int32(dst)], True, 255, 3, cv2.LINE_AA)
+                # h2, w2,g = self.img2.shape
+                # print(h2)
+                # print(w2)
+                # print(g)
+                break
+
+
+        """if(direction_output==1):
             print("Move forward with downward thrust")
         elif(direction_output==2):
             print("Wait for few seconds till location 4 is stable")
@@ -196,7 +277,7 @@ class prediction:
         elif(direction_output==8):
             print("Move backward with upward thrust")
         elif(direction_output==9):
-            print("Move backward")
+            print("Move backward")"""
 
         new_direction = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/directions/" + str(direction_output) + ".jpg"
 
@@ -210,16 +291,19 @@ class prediction:
             self.direction_image = cv2.imread(new_direction)
             self.direction = direction_output
 
-        print(self.direction_image)
+        #print(self.direction_image)
         vis1=np.hstack((self.direction_image, self.location_image))
 
-        vis = np.vstack((self.img2, vis1))
 
-        write_name = str(self.count) + ".jpg"
+
+
+        #vis = np.vstack((self.img2, vis1))
+
+        write_name = "Demo/"+str(self.count) + ".jpg"
         self.count += 1
 
-        #cv2.imshow("Prediction",vis)#
-        cv2.imwrite(write_name, vis)
+        cv2.imshow("Prediction",self.img2)#
+        #cv2.imwrite(write_name, vis)
         # time.sleep(0.001)
 
     def readframe_func(self):
@@ -227,9 +311,10 @@ class prediction:
         while (self.cap.isOpened()):
             ret, self.img = self.cap.read()
             #print(self.img)
-            self.img2 = self.img;
+            self.img2 = self.img[33:534, 126:581]
 
             self.img = self.img[33:534, 126:581]
+
             # time.sleep(1)
             cv2.waitKey(1)
             self.output_frame_details();
@@ -267,7 +352,7 @@ class prediction:
 
         # self.cap = cv2.VideoCapture("E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sample_video.mp4")
         self.cap = cv2.VideoCapture(
-            "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sample_video.mp4")
+            "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sample3.mp4")
         # "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sample_video.mp4")
         ret, self.img = self.cap.read()
 
@@ -284,6 +369,31 @@ class prediction:
         # self.visualize_thread = threading.Thread(name="visualize", target=self.visualize_func )
         # self.visualize_thread.setDaemon(True)
         # self.visualize_thread.start()
+
+
+
+        #surf facts
+
+        self.surf = cv2.xfeatures2d.SURF_create(400)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         # while(True):
         self.readframe_func();
