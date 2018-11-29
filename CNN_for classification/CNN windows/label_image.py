@@ -184,6 +184,8 @@ class prediction:
 
 
 
+
+
         for filename in glob.glob("surf_images/location"+str(file_name)+"/*.jpg"):
 
 
@@ -218,6 +220,7 @@ class prediction:
             #print(len(matches))
 
             if len(good) > 25:
+                self.first_pointer=True
                 src_pts = np.float32([kp1[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
                 dst_pts = np.float32([kp2[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
 
@@ -234,10 +237,14 @@ class prediction:
                 # print(w2)
                 # print(g)
                 #print(dst[0][0])
-                x=(dst[0][0][0]+dst[1][0][0]+dst[2][0][0]+dst[3][0][0])/4
-                y=(dst[0][0][1]+dst[1][0][1]+dst[2][0][1]+dst[3][0][1])/4
+                self.x=(dst[0][0][0]+dst[1][0][0]+dst[2][0][0]+dst[3][0][0])/4
+                self.y=(dst[0][0][1]+dst[1][0][1]+dst[2][0][1]+dst[3][0][1])/4
 
-                cv2.circle(self.img2, (np.int32(x), np.int32(y)), 10, (0, 0, 255), -1)
+                break
+
+            if(self.first_pointer==True):
+                cv2.circle(self.img2, (np.int32(self.x), np.int32(self.y)), 10, (0, 0, 255), -1)
+
 
                 #cv2.line(self.img2, (dst[0][0][0],dst[0][0][1]), (dst[1][0][0],dst[1][0][1]), (0, 255, 0), 4);
                 #cv2.line(self.img2, (dst[1][0][0],dst[1][0][1]), (dst[2][0][0], dst[2][0][1]), (0, 255, 0), 4);
@@ -257,7 +264,7 @@ class prediction:
                 # print(h2)
                 # print(w2)
                 # print(g)
-                break
+
 
 
         """if(direction_output==1):
@@ -279,9 +286,9 @@ class prediction:
         elif(direction_output==9):
             print("Move backward")"""
 
-        new_direction = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/directions/" + str(direction_output) + ".jpg"
+        new_direction = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/directions/new/" + str(direction_output) + ".jpg"
 
-        new_location = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/locations/new/" + str(
+        new_location = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/locations/new2/" + str(
             file_name) + ".jpg"
         if (self.location != new_location):
             self.location_image = cv2.imread(new_location)
@@ -295,15 +302,13 @@ class prediction:
         vis1=np.hstack((self.direction_image, self.location_image))
 
 
-
-
-        #vis = np.vstack((self.img2, vis1))
+        vis = np.vstack((self.img2, vis1))
 
         write_name = "Demo/"+str(self.count) + ".jpg"
         self.count += 1
 
-        #cv2.imshow("Prediction",self.img2)#
-        cv2.imwrite(write_name, self.img2)
+        cv2.imshow("Prediction",vis)#
+        #cv2.imwrite(write_name, vis)
         # time.sleep(0.001)
 
     def readframe_func(self):
@@ -335,7 +340,7 @@ class prediction:
         self.label_file = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_labels.txt"
         # self.model_file = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_graph.pb"
         # self.label_file = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_labels.txt"
-
+        self.first_pointer=False
         self.input_height = 224
         self.input_width = 224
         self.input_mean = 0
