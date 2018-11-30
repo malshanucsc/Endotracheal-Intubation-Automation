@@ -206,6 +206,9 @@ class prediction:
             #matches = bf.match(des1, des2)
 
             flann = cv2.FlannBasedMatcher(index_params, search_params)
+            if(len(des2)<=1):
+                break
+            
 
             matches = flann.knnMatch(des1, des2, k=2)
 
@@ -223,24 +226,29 @@ class prediction:
                 self.first_pointer=True
                 src_pts = np.float32([kp1[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
                 dst_pts = np.float32([kp2[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
+                M=[]
 
                 M, mask = cv2.findHomography(src_pts, dst_pts, 0, 5.0)
 
                 h, w = match_img.shape
                 pts = np.float32([[0, 0], [0, h - 1], [w - 1, h - 1], [w - 1, 0]]).reshape(-1, 1, 2)
+                
+                #print(type(M))
+
+                if((isinstance(M,np.ndarray))):
 
 
-                dst = cv2.perspectiveTransform(pts, M)
-                #print(dst)
-                # h2,w2,g=self.img2.shape
-                # print(h2)
-                # print(w2)
-                # print(g)
-                #print(dst[0][0])
-                self.x=(dst[0][0][0]+dst[1][0][0]+dst[2][0][0]+dst[3][0][0])/4
-                self.y=(dst[0][0][1]+dst[1][0][1]+dst[2][0][1]+dst[3][0][1])/4
+                    dst = cv2.perspectiveTransform(pts, M)
+                    #print(dst)
+                    # h2,w2,g=self.img2.shape
+                    # print(h2)
+                    # print(w2)
+                    # print(g)
+                    #print(dst[0][0])
+                    self.x=(dst[0][0][0]+dst[1][0][0]+dst[2][0][0]+dst[3][0][0])/4
+                    self.y=(dst[0][0][1]+dst[1][0][1]+dst[2][0][1]+dst[3][0][1])/4
 
-                break
+                    break
 
             if(self.first_pointer==True):
                 cv2.circle(self.img2, (np.int32(self.x), np.int32(self.y)), 10, (0, 0, 255), -1)
@@ -300,15 +308,18 @@ class prediction:
 
         #print(self.direction_image)
         vis1=np.hstack((self.direction_image, self.location_image))
-
+        vis1=vis1[0:65,14:440]
+        
+        
 
         vis = np.vstack((self.img2, vis1))
 
         write_name = "Demo/"+str(self.count) + ".jpg"
         self.count += 1
 
-        cv2.imshow("Prediction",vis)#
-        #cv2.imwrite(write_name, vis)
+
+        #cv2.imshow("Prediction",vis)
+        cv2.imwrite(write_name, vis)
         # time.sleep(0.001)
 
     def readframe_func(self):
@@ -316,9 +327,9 @@ class prediction:
         while (self.cap.isOpened()):
             ret, self.img = self.cap.read()
             #print(self.img)
-            self.img2 = self.img[33:534, 126:581]
+            self.img2 = self.img[33:534, 155:581]
 
-            self.img = self.img[33:534, 126:581]
+            self.img = self.img[33:534, 155:581]
 
             # time.sleep(1)
             cv2.waitKey(1)
@@ -379,7 +390,7 @@ class prediction:
 
         #surf facts
 
-        self.surf = cv2.xfeatures2d.SURF_create(400)
+        self.surf = cv2.xfeatures2d.SIFT_create()
 
 
 
