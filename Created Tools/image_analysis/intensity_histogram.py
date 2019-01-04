@@ -13,7 +13,7 @@ for filename in glob.glob('*.jpg'):
     plt.hist(img.ravel(),256,[0,256]);
     plt.suptitle(filename, fontsize=10)
 
-    plt.savefig('histogram_set/'+filename)
+    plt.savefig('Intensity/'+filename)
     plt.close() 
         
     #plt.show()

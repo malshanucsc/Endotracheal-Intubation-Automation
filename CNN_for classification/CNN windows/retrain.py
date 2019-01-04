@@ -1168,7 +1168,7 @@ if __name__ == '__main__':
   parser.add_argument(
       '--image_dir',
       type=str,
-      default='training_data/New training',
+      default='training_data/data',
       help='Path to folders of labeled images.'
   )
   parser.add_argument(
@@ -1219,13 +1219,13 @@ if __name__ == '__main__':
   parser.add_argument(
       '--testing_percentage',
       type=int,
-      default=10,
+      default=20,
       help='What percentage of images to use as a test set.'
   )
   parser.add_argument(
       '--validation_percentage',
       type=int,
-      default=10,
+      default=20,
       help='What percentage of images to use as a validation set.'
   )
   parser.add_argument(
@@ -1326,8 +1326,9 @@ if __name__ == '__main__':
       type=str,
       #default='https://tfhub.dev/google/imagenet/inception_v1/feature_vector/1',
       #default='https://tfhub.dev/google/imagenet/inception_resnet_v2/feature_vector/1',
-      default='https://tfhub.dev/google/imagenet/mobilenet_v2_035_224/feature_vector/1',
+      default='https://tfhub.dev/google/imagenet/mobilenet_v2_035_96/feature_vector/1',
       #default=('https://tfhub.dev/google/imagenet/inception_v3/feature_vector/1'),
+      #default='https://tfhub.dev/google/imagenet/resnet_v2_152/feature_vector/1',#accuracy 99.0
       help="""\
       Which TensorFlow Hub module to use.
       See https://github.com/tensorflow/hub/blob/r0.1/docs/modules/image.md

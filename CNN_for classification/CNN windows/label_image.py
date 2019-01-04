@@ -318,8 +318,8 @@ class prediction:
         self.count += 1
 
 
-        #cv2.imshow("Prediction",vis)
-        cv2.imwrite(write_name, vis)
+        cv2.imshow("Prediction",vis)
+        #cv2.imwrite(write_name, vis)
         # time.sleep(0.001)
 
     def readframe_func(self):
