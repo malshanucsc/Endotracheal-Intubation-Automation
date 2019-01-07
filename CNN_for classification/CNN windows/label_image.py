@@ -26,6 +26,7 @@ import threading
 import time
 from PIL import Image
 import glob
+import random
 
 count = 1
 
@@ -192,6 +193,11 @@ class prediction:
             match_img = cv2.imread(filename,0)
             #cv2.imshow("matching image",match_img)
             kp1, des1 = self.surf.detectAndCompute(match_img, None)
+            
+            #outkeypointimages=cv2.drawKeypoints(match_img, kp1, np.array([]), (0,0,255));
+            #cv2.imshow("asas",outkeypointimages)
+            #cv2.imwrite("surf_images/keypoints/"+str(random.randint(1,100000))+".jpg",outkeypointimages)
+
 
             temp_out_img = cv2.cvtColor(self.img2, cv2.COLOR_BGR2GRAY)
 
@@ -239,6 +245,8 @@ class prediction:
 
 
                     dst = cv2.perspectiveTransform(pts, M)
+                    #img2 = cv2.polylines(self.img2,[np.int32(dst)],True,255,3, cv2.LINE_AA)
+                    #cv2.imwrite("surf_images/polylines/"+str(random.randint(1,100000))+".jpg",img2)
                     #print(dst)
                     # h2,w2,g=self.img2.shape
                     # print(h2)
