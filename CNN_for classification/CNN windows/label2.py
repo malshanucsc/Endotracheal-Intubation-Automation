@@ -29,6 +29,17 @@ import glob
 import random
 import sys
 
+# import the necessary packages for UI
+
+
+import tkinter
+
+import PIL.Image, PIL.ImageTk
+
+
+##ui end
+
+
 count = 1
 
 
@@ -92,6 +103,18 @@ class prediction:
     #def output_frame_details(self):
         # print(input_height)
 
+    def update(self):
+
+        # Get a frame from the video source
+
+        GUIframe=cv2.cvtColor(self.vis, cv2.COLOR_RGB2BGR)
+
+
+        self.photo = PIL.ImageTk.PhotoImage(image=PIL.Image.fromarray(GUIframe))
+
+        self.canvas.create_image(0, 0, image=self.photo, anchor=tkinter.NW)
+        #self.window.after(self.delay, self.update)
+
 
     def visualize_func(self, predicting_location):
         file_name = predicting_location
@@ -101,10 +124,11 @@ class prediction:
             file_name = 10
         direction_output = self.getNextDirection(file_name, "forward")
 
-        # print(file_name)
-        self.count+=1
+        #print(file_name)
+        #self.count+=1
 
         for filename in glob.glob("surf_images/location" + str(file_name) + "/*.jpg"):
+            #print(filename)
 
             match_img = cv2.imread(filename, 0)
             # cv2.imshow("matching image",match_img)
@@ -142,11 +166,11 @@ class prediction:
             good = []
 
             for m, n in matches:
-                if m.distance < 0.8 * n.distance:
+                if m.distance < 0.99 * n.distance:
                     good.append(m)
-            # print(len(matches))
+            #print(len(good))
 
-            if len(good) > 25:
+            if len(good) > 20:
                 self.first_pointer = True
                 src_pts = np.float32([kp1[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
                 dst_pts = np.float32([kp2[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
@@ -174,30 +198,38 @@ class prediction:
                     if(self.xx>0 and self.yy>0):
                         self.x = self.xx
                         self.y = self.yy
+                    else:
+                        self.x = 240
+                        self.y = 213
 
 
 
                     break
 
 
-            if (self.first_pointer == True):
-                #print(str(self.x)+"     "+str(self.y))
+        if (self.first_pointer == True):
+            #print(str(self.x)+"     "+str(self.y))
 
-                hh2, ww2, g = self.img2.shape
+            hh2, ww2, g = self.img2.shape
 
-                print(str(hh2)+"  "+str(ww2))
+            #print(str(hh2)+"  "+str(ww2))
 
-                if(self.x<20):
-                    self.x+=20
-                if (self.x > 461):
-                    self.x -= 20
-                if (self.y < 20):
-                    self.y += 20
-                if (self.y > 406):
-                    self.y -= 20
+            if(self.x<20):
+                self.x+=20
+            if (self.x > 461):
+                self.x -= 20
+            if (self.y < 20):
+                self.y += 20
+            if (self.y > 406):
+                self.y -= 20
 
-                cv2.circle(self.img2, (np.int32(self.x), np.int32(self.y)), 10, (0, 0, 255), -1)
-                print(np.int32(self.x))
+            if(np.int32(self.y)==102):
+                self.y=180
+            print(str(self.x) + "     " + str(self.y))
+
+
+            cv2.circle(self.img2, (np.int32(self.x), np.int32(self.y)), 10, (0, 0, 255), -1)
+            #print(np.int32(self.x))
 
                 # cv2.line(self.img2, (dst[0][0][0],dst[0][0][1]), (dst[1][0][0],dst[1][0][1]), (0, 255, 0), 4);
                 # cv2.line(self.img2, (dst[1][0][0],dst[1][0][1]), (dst[2][0][0], dst[2][0][1]), (0, 255, 0), 4);
@@ -253,13 +285,33 @@ class prediction:
         vis1 = np.hstack((self.direction_image, self.location_image))
         vis1 = vis1[0:65, 14:440]
 
-        vis = np.vstack((self.img2, vis1))
+        self.vis = np.vstack((self.img2, vis1))
 
-        write_name = "Demo/" + str(self.count) + ".jpg"
-        #self.count += 1
+        write_name = "newdemo/" + str(self.count) + ".jpg"
+        self.count += 1
 
-        cv2.imshow("Prediction", vis)
-        # cv2.imwrite(write_name, vis)
+
+        #UI part
+
+
+
+        self.update()
+        self.window.update()
+
+
+
+
+
+
+        ##ui part end
+
+        #h,w,g=self.vis.shape
+        #print(h)
+        #print(w)
+
+
+        cv2.imshow("Prediction", self.vis)
+        #cv2.imwrite(write_name, vis)
         # time.sleep(0.001)
 
     def readframe_func(self):
@@ -406,21 +458,55 @@ class prediction:
         self.output_layer = "final_result"
         self.graph = self.load_graph(self.model_file)
         #print(sys.getsizeof(self.graph))
-        self.current_location = 1
+        self.current_location = 10
         self.old_location_for_direction = 1
-        self.count = 1
+        self.count = 6113
         self.location = ""
         self.direction = ""
         # /media/cola/EDU
 
+
+
+
+
+
+
+
+
         # self.cap = cv2.VideoCapture("E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sample_video.mp4")
         self.cap = cv2.VideoCapture(
-            "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/newsample.mp4")
+            "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/8.mp4")
         # "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sample_video.mp4")
         ret, self.img = self.cap.read()
 
         self.img2 = self.img;
         self.location_image = self.img2
+
+        ##UI part
+
+        # initialize the root window and image panel
+
+        self.window = tkinter.Tk()
+        self.window.title("Tkinter and OpenCV")
+        self.video_source = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/8.mp4"
+
+        # open video source (by default this will try to open the computer webcam)
+        #self.vid = MyVideoCapture(self.video_source)
+        # Create a canvas that can fit the above video source size
+        self.canvas = tkinter.Canvas(self.window, width=426, height=546)
+        self.canvas.pack()
+        # Button that lets the user take a snapshot
+        #self.btn_snapshot = tkinter.Button(window, text="Snapshot", width=50, command=self.snapshot)
+        #self.btn_snapshot.pack(anchor=tkinter.CENTER, expand=True)
+
+        # After it is called once, the update method will be automatically called every delay milliseconds
+        #self.delay = 15
+        #self.update()
+        #self.window.mainloop()
+
+        ##
+
+
         # /media/cola/EDU/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows
 
         # self.read_frame_thread = threading.Thread(name="read_frame", target= self.readframe_func)
@@ -450,4 +536,3 @@ class prediction:
 
 run = prediction()
 run.main()
-

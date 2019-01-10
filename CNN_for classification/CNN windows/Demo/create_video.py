@@ -7,20 +7,24 @@ from cv2 import VideoWriter, VideoWriter_fourcc, imread, resize
 img = cv2.imread("1.jpg")
 h,w,g=img.shape
 #video=cv2.VideoWriter('Demo.avi',cv2.VideoWriter_fourcc(*'DIVX'),20.0,(720,645))
-video=cv2.VideoWriter('Demo.avi',cv2.VideoWriter_fourcc(*'DIVX'),20.0,(h,w))
-array2=["frame1_","frame2_","frame3_","frame5_","frame6_","frame7_","frame8_"]
+video=cv2.VideoWriter('Demo.avi',cv2.VideoWriter_fourcc(*'DIVX'),20.0,(w,h))
+#array2=["frame1_","frame2_","frame3_","frame5_","frame6_","frame7_","frame8_"]
+#video = cv2.VideoWriter('video.avi',0,1,(w,h))
+#j=1
 
-for i in range (1,1087):
-    img = cv2.imread(str(i)+".jpg")
-    h,w,g=img.shape
+for i in range (1,9200):
+    img = cv2.imread("newdemo/"+str(i)+".jpg")
+    if(not(img is None)):
+        #h,w,g=img.shape
 
-    #print(img)
-    cv2.imshow("im",img)
-    cv2.waitKey(50)
-    video.write(img)
-    
+        #print(i)
+        cv2.imshow("Demo",img)
+        #j+=1
+        cv2.waitKey(100)
+        #video.write(img)
+
 """
-for filename in glob.glob("*.jpg"):
+for filename in glob.glob("newdemo/newestimages/*.jpg"):
     
     img = cv2.imread(filename)
     print(filename)
@@ -70,5 +74,5 @@ for i in array2:
             img = cv2.imread(filename)
             video.write(img)
 """
-
+cv2.destroyAllWindows()
 video.release()
