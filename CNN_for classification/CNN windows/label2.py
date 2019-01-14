@@ -53,6 +53,7 @@ class prediction:
         with graph.as_default():
             tf.import_graph_def(graph_def)
 
+
         return graph
 
     #def read_tensor_from_image_file(self, img, input_height=299, input_width=299, input_mean=0, input_std=255):
@@ -66,34 +67,36 @@ class prediction:
         proto_as_ascii_lines = tf.gfile.GFile(label_file).readlines()
         for l in proto_as_ascii_lines:
             label.append(l.rstrip())
+        print(label)
         return label
 
     def getNextDirection(self, new_location, movement_type):
 
-        if (movement_type == "forward"):
+        if movement_type == "forward":
 
             if (new_location == 2 or new_location == 7):
                 # bend the  tube downward due to curves in the nasal  cavity and trachea
                 return 1
-            elif (new_location == 4):
-                # due to sensitivity in this area tracheal opening close and open quickly. waiting sometimes there will stabilize the opening
+            elif new_location == 4:
+                # due to sensitivity in this area tracheal opening close and open quickly.
+                #  waiting sometimes there will stabilize the opening
                 return 2
-            elif (new_location == 5):
+            elif new_location == 5:
                 # when tracheal openning closed it always tend to close it a obstacle is near the opening
                 return 3
-            elif (new_location == 8):
+            elif new_location == 8:
                 # reduce touching with wall of wind pipe spirals to reduce bleedings
                 return 4
-            elif (new_location == 9):
+            elif new_location == 9:
                 # if sped is high and miss the location 10 tube will move further and then it is difficult to capture due to locations beyond 10 is similar as 8-10
                 return 5
-            elif (new_location == 10):
+            elif new_location == 10:
                 # since intubation tube should stop 2cm above to spread air for both lungs
                 return 6
             else:
                 return 7
 
-        if (movement_type == "backward"):
+        if movement_type == "backward":
             if (new_location == 2 or new_location == 7):
                 # bend the  tube upward due to curves in the nasal  cavity and trachea
                 return 8
@@ -107,7 +110,7 @@ class prediction:
 
         # Get a frame from the video source
 
-        GUIframe=cv2.cvtColor(self.vis, cv2.COLOR_RGB2BGR)
+        GUIframe = cv2.cvtColor(self.vis, cv2.COLOR_RGB2BGR)
 
 
         self.photo = PIL.ImageTk.PhotoImage(image=PIL.Image.fromarray(GUIframe))
@@ -116,11 +119,11 @@ class prediction:
         #self.window.after(self.delay, self.update)
 
 
-    def visualize_func(self, predicting_location):
+    def visualize_func(self, predicting_location ):
         file_name = predicting_location
-        if (predicting_location == 0):
+        if predicting_location == 0:
             file_name = 1
-        elif (predicting_location == 1):
+        elif predicting_location == 1:
             file_name = 10
         direction_output = self.getNextDirection(file_name, "forward")
 
@@ -153,9 +156,9 @@ class prediction:
 
             flann = cv2.FlannBasedMatcher(index_params, search_params)
 
-            if(des2 is None):
+            if des2 is None:
                 break
-            if (len(des2) <= 1):
+            if len(des2) <= 1:
                 break
 
 
@@ -183,7 +186,7 @@ class prediction:
 
                 # print(type(M))
 
-                if ((isinstance(M, np.ndarray))):
+                if isinstance(M, np.ndarray):
                     self.dst = cv2.perspectiveTransform(pts, M)
                     # img2 = cv2.polylines(self.img2,[np.int32(dst)],True,255,3, cv2.LINE_AA)
                     # cv2.imwrite("surf_images/polylines/"+str(random.randint(1,100000))+".jpg",img2)
@@ -193,9 +196,9 @@ class prediction:
                     # print(w2)
                     # print(g)
                     #print(self.dst)
-                    self.xx=(self.dst[0][0][0] + self.dst[1][0][0] + self.dst[2][0][0] + self.dst[3][0][0]) / 4
-                    self.yy=(self.dst[0][0][1] + self.dst[1][0][1] + self.dst[2][0][1] + self.dst[3][0][1]) / 4
-                    if(self.xx>0 and self.yy>0):
+                    self.xx = (self.dst[0][0][0] + self.dst[1][0][0] + self.dst[2][0][0] + self.dst[3][0][0]) / 4
+                    self.yy = (self.dst[0][0][1] + self.dst[1][0][1] + self.dst[2][0][1] + self.dst[3][0][1]) / 4
+                    if(self.xx > 0 and self.yy > 0):
                         self.x = self.xx
                         self.y = self.yy
                     else:
@@ -207,24 +210,24 @@ class prediction:
                     break
 
 
-        if (self.first_pointer == True):
+        if self.first_pointer == True:
             #print(str(self.x)+"     "+str(self.y))
 
             hh2, ww2, g = self.img2.shape
 
             #print(str(hh2)+"  "+str(ww2))
 
-            if(self.x<20):
-                self.x+=20
-            if (self.x > 461):
+            if self.x < 20:
+                self.x += 20
+            if self.x > 461:
                 self.x -= 20
-            if (self.y < 20):
+            if self.y < 20:
                 self.y += 20
-            if (self.y > 406):
+            if self.y > 406:
                 self.y -= 20
 
-            if(np.int32(self.y)==102):
-                self.y=180
+            if np.int32(self.y) == 102:
+                self.y = 180
             print(str(self.x) + "     " + str(self.y))
 
 
@@ -273,11 +276,11 @@ class prediction:
 
         new_location = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/locations/new2/" + str(
             file_name) + ".jpg"
-        if (self.location != new_location):
+        if self.location != new_location:
             self.location_image = cv2.imread(new_location)
             self.location = new_location
 
-        if (self.direction != direction_output):
+        if self.direction != direction_output:
             self.direction_image = cv2.imread(new_direction)
             self.direction = direction_output
 
@@ -320,7 +323,7 @@ class prediction:
 
         with tf.Session(graph=self.graph) as sess:
 
-            while (self.cap.isOpened()):
+            while self.cap.isOpened():
                 ret, self.img = self.cap.read()
                 # print(self.img)
                 self.img2 = self.img[43:524, 146:572]
@@ -386,9 +389,7 @@ class prediction:
                 #print(len(t))
 
 
-                results = sess.run(output_operation.outputs[0], {
-                input_operation.outputs[0]: t
-                })
+                results = sess.run(output_operation.outputs[0], {input_operation.outputs[0]: t})
 
                 #print(sys.getsizeof(sess))
 
