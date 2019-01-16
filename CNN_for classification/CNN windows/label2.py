@@ -271,10 +271,10 @@ class prediction:
         elif(direction_output==9):
             print("Move backward")"""
 
-        new_direction = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/directions/new/" + str(
+        new_direction = "D:/Academic/4th Year/1st Semester/Project SCS- 4123/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/directions/new/" + str(
             direction_output) + ".jpg"
 
-        new_location = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/locations/new2/" + str(
+        new_location = "D:/Academic/4th Year/1st Semester/Project SCS- 4123/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/locations/new2/" + str(
             file_name) + ".jpg"
         if self.location != new_location:
             self.location_image = cv2.imread(new_location)
@@ -293,16 +293,10 @@ class prediction:
         write_name = "newdemo/" + str(self.count) + ".jpg"
         self.count += 1
 
-
         #UI part
-
-
 
         self.update()
         self.window.update()
-
-
-
 
 
 
@@ -358,25 +352,6 @@ class prediction:
                 #print(normalized)
                 #sess = tf.Session()
                 t = sess.run(normalized)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
                 input_name = "import/" + self.input_layer
@@ -446,8 +421,8 @@ class prediction:
 
     def main(self):
 
-        self.model_file = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_graph.pb"
-        self.label_file = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_labels.txt"
+        self.model_file = "D:/Academic/4th Year/1st Semester/Project SCS- 4123/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_graph.pb"
+        self.label_file = "D:/Academic/4th Year/1st Semester/Project SCS- 4123/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_labels.txt"
         # self.model_file = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_graph.pb"
         # self.label_file = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_labels.txt"
         self.first_pointer = False
@@ -467,16 +442,9 @@ class prediction:
         # /media/cola/EDU
 
 
-
-
-
-
-
-
-
         # self.cap = cv2.VideoCapture("E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sample_video.mp4")
         self.cap = cv2.VideoCapture(
-            "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/8.mp4")
+            "D:/Academic/4th Year/1st Semester/Project SCS- 4123/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/8.mp4")
         # "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sample_video.mp4")
         ret, self.img = self.cap.read()
 
@@ -489,7 +457,7 @@ class prediction:
 
         self.window = tkinter.Tk()
         self.window.title("Tkinter and OpenCV")
-        self.video_source = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/8.mp4"
+        self.video_source = "D:/Academic/4th Year/1st Semester/Project SCS- 4123/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/8.mp4"
 
         # open video source (by default this will try to open the computer webcam)
         #self.vid = MyVideoCapture(self.video_source)
