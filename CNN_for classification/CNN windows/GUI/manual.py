@@ -10,6 +10,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QFileDialog
 
+import ntpath
+
 class Ui_manualWindow(object):
     def setupUi(self, manualWindow):
         manualWindow.setObjectName("manualWindow")
@@ -627,7 +629,8 @@ class Ui_manualWindow(object):
             "All Files (*);;Python Files (*.py)",
             options=options)
         print(fileName)
-        self.lblVideoName.setText(fileName)
+        videoName = ntpath.basename(fileName)
+        self.lblVideoName.setText(videoName)
         #self.progrezz()
 
 
