@@ -613,10 +613,24 @@ class Ui_manualWindow(object):
 
     def openFileNameDialog(self):
         print("File is being uploaded...")
-        global manualWindow, ui
-        fileName = QFileDialog.getOpenFileName(None)
-        print(fileName[0])
-        ui.lblVideoName.setText(str(fileName[0]))
+        #global manualWindow, ui
+        #fileName = QFileDialog.getOpenFileName(None)
+        #print(fileName[0])
+        #ui.lblVideoName.setText(str(fileName[0]))
+        ###MHS
+        options = QtWidgets.QFileDialog.Options()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(
+            None,
+            "QFileDialog.getOpenFileName()",
+            "",
+            "All Files (*);;Python Files (*.py)",
+            options=options)
+        print(fileName)
+        self.lblVideoName.setText(fileName)
+        #self.progrezz()
+
+
 
     def startIntubation(self):
             print("Process started...")
