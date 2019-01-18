@@ -32,7 +32,17 @@ class Ui_manualWindow(object):
     def setupUi(self, manualWindow):
 
         manualWindow.setObjectName("manualWindow")
-        manualWindow.resize(699, 610)
+        #manualWindow.setGeometry(QtCore.QRect(350,30,699,690))
+        manualWindow.resize(699, 690)
+        manualWindow.setGeometry(
+            QtWidgets.QStyle.alignedRect(
+                QtCore.Qt.LeftToRight,
+                QtCore.Qt.AlignCenter,
+                manualWindow.size(),
+                app.desktop().availableGeometry()
+            )
+        )
+
         manualWindow.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.centralwidget = QtWidgets.QWidget(manualWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -604,7 +614,7 @@ class Ui_manualWindow(object):
         self.verticalScrollBarSnaps.setOrientation(QtCore.Qt.Vertical)
         self.verticalScrollBarSnaps.setObjectName("verticalScrollBarSnaps")
         self.lblLoadImage = QtWidgets.QLabel(self.centralwidget)
-        self.lblLoadImage.setGeometry(QtCore.QRect(40, 242, 451, 271))
+        self.lblLoadImage.setGeometry(QtCore.QRect(40, 242, 441, 391))
         self.lblLoadImage.setText("")
         self.lblLoadImage.setObjectName("lblLoadImage")
         manualWindow.setCentralWidget(self.centralwidget)
@@ -614,7 +624,7 @@ class Ui_manualWindow(object):
 
         self.retranslateUi(manualWindow)
         QtCore.QMetaObject.connectSlotsByName(manualWindow)
-        print("hg")
+
 
     def retranslateUi(self, manualWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -647,15 +657,15 @@ class Ui_manualWindow(object):
         print("File is being uploaded...")
         options = QtWidgets.QFileDialog.Options()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
-        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(
+        self.fileName, _ = QtWidgets.QFileDialog.getOpenFileName(
                 None,
                 "QFileDialog.getOpenFileName()",
                 "",
                 "All Files (*);;Python Files (*.py)",
                 options=options)
-        print(fileName)
-        videoName = ntpath.basename(fileName)
-        print(videoName)
+        #print(self.fileName)
+        videoName = ntpath.basename(self.fileName)
+        #print(videoName)
         self.lblVideoName.setText(videoName)
         self.progrezz()
 
@@ -663,8 +673,10 @@ class Ui_manualWindow(object):
         print("Process is being started...")
         thread2 = Thread(target=self.runvideo, args=())
         thread2.start()
+        self.run.video_file=self.fileName
 
-        time.sleep(5)
+
+        time.sleep(1)
 
         thread = Thread(target=self.threaded_function, args=())
         thread.start()
@@ -679,6 +691,8 @@ class Ui_manualWindow(object):
 
     def runvideo(self):
         self.run = label2.prediction()
+        #print(self.run.video_file)
+
         self.run.main2()
 
 
@@ -686,13 +700,15 @@ class Ui_manualWindow(object):
 
 
 
+
     def threaded_function(self):
-        for i in range (10000):
+        while(True):
+
 
             if self.thread_exit:
                 return
-            self.lblTubePosition.setText(str(i))
-            print(self.run.queue)
+            self.lblTubePosition.setText(str(self.run.output_location))
+            #print(self.run.queue)
 
             if(self.run.queue.isEmpty()==False):
                 img = cv2.cvtColor(self.run.queue.dequeue(), cv2.COLOR_RGB2BGR)
@@ -705,7 +721,7 @@ class Ui_manualWindow(object):
 
             #pixmap = QPixmap('C:\\Users\\Sandunika\\Downloads\\img\\{n}.jpg'.format(n=str((i % 5) + 1)))
                 self.lblLoadImage.setPixmap(pixmap)
-                time.sleep(1)
+                time.sleep(0.1)
 
 
 

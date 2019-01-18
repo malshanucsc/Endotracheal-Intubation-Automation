@@ -112,17 +112,6 @@ class prediction:
     #def output_frame_details(self):
         # print(input_height)
 
-    def update(self):
-
-        # Get a frame from the video source
-
-        GUIframe = cv2.cvtColor(self.vis, cv2.COLOR_RGB2BGR)
-
-
-        self.photo = PIL.ImageTk.PhotoImage(image=PIL.Image.fromarray(GUIframe))
-
-        self.canvas.create_image(0, 0, image=self.photo, anchor=tkinter.NW)
-        #self.window.after(self.delay, self.update)
 
 
     def visualize_func(self, predicting_location ):
@@ -132,12 +121,13 @@ class prediction:
         elif predicting_location == 1:
             file_name = 10
         direction_output = self.getNextDirection(file_name, "forward")
+        self.output_location=file_name
 
         #print(file_name)
         #self.count+=1
 
-        for filename in glob.glob("surf_images/location" + str(file_name) + "/*.jpg"):
-            #print(filename)
+        for filename in glob.glob("../surf_images/location" + str(file_name) + "/*.jpg"):
+
 
             match_img = cv2.imread(filename, 0)
             # cv2.imshow("matching image",match_img)
@@ -283,18 +273,18 @@ class prediction:
         new_location = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/locations/new2/" + str(
             file_name) + ".jpg"
         if self.location != new_location:
-            self.location_image = cv2.imread(new_location)
+            #self.location_image = cv2.imread(new_location)
             self.location = new_location
 
         if self.direction != direction_output:
-            self.direction_image = cv2.imread(new_direction)
+            #self.direction_image = cv2.imread(new_direction)
             self.direction = direction_output
 
         # print(self.direction_image)
-        vis1 = np.hstack((self.direction_image, self.location_image))
-        vis1 = vis1[0:65, 14:440]
+        #vis1 = np.hstack((self.direction_image, self.location_image))
+        #vis1 = vis1[0:65, 14:440]
 
-        self.vis = np.vstack((self.img2, vis1))
+        self.vis = self.img2
 
         write_name = "newdemo/" + str(self.count) + ".jpg"
         self.count += 1
@@ -468,13 +458,15 @@ class prediction:
         self.output_layer = "final_result"
         self.graph = self.load_graph(self.model_file)
         #print(sys.getsizeof(self.graph))
-        self.current_location = 10
+        self.current_location = 5
         self.old_location_for_direction = 1
         self.count = 6113
         self.location = ""
         self.direction = ""
         self.queue=Queue.Queue()
         # /media/cola/EDU
+        #self.video_file = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/1.mp4"
+        #"E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/5.mp4"
 
 
 
@@ -485,8 +477,8 @@ class prediction:
 
 
         # self.cap = cv2.VideoCapture("E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sample_video.mp4")
-        self.cap = cv2.VideoCapture(
-            "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/8.mp4")
+        #print(self.video_file)
+        self.cap = cv2.VideoCapture(self.video_file)
         # "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sample_video.mp4")
         ret, self.img = self.cap.read()
 
@@ -546,4 +538,4 @@ class prediction:
 
 
 #run = prediction()
-#run.main()
+#run.main2()
