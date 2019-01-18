@@ -628,6 +628,15 @@ class Ui_manualWindow(object):
         self.label_8.setText(_translate("manualWindow", "All Right Reserved"))
         self.label_5.setText(_translate("manualWindow", "Current Tube Position:"))
 
+
+    def progrezz(self):
+        self.completed = 0
+
+        while self.completed < 100:
+            self.completed += 0.0001
+            self.progressBarFileUpload.setValue(self.completed)
+
+
     def openFileNameDialog(self):
         print("File is being uploaded...")
         options = QtWidgets.QFileDialog.Options()
@@ -642,7 +651,7 @@ class Ui_manualWindow(object):
         videoName = ntpath.basename(fileName)
         print(videoName)
         self.lblVideoName.setText(videoName)
-        #self.progrezz()
+        self.progrezz()
 
     def startIntubation(self):
         print("Process is being started...")
