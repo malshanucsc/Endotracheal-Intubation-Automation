@@ -5,15 +5,25 @@
 # Created by: PyQt5 UI code generator 5.11.2
 #
 # WARNING! All changes made in this file will be lost!
+import time
+from threading import Thread
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QFileDialog
 
-import ntpath
+import sys
+
 
 class Ui_manualWindow(object):
+
+    def __init__(self):
+        self.thread_exit = False
+
+
+
     def setupUi(self, manualWindow):
+
         manualWindow.setObjectName("manualWindow")
         manualWindow.resize(699, 610)
         manualWindow.setFocusPolicy(QtCore.Qt.StrongFocus)
@@ -288,7 +298,6 @@ class Ui_manualWindow(object):
         self.btnSaveSnapshot = QtWidgets.QPushButton(self.centralwidget)
         self.btnSaveSnapshot.setEnabled(True)
         self.btnSaveSnapshot.setGeometry(QtCore.QRect(369, 520, 121, 21))
-        self.btnSaveSnapshot.clicked.connect(self.saveImage)
         font = QtGui.QFont()
         font.setFamily("Open Sans")
         font.setPointSize(10)
@@ -370,7 +379,7 @@ class Ui_manualWindow(object):
 "}")
         self.btnStartProcess.setObjectName("btnStartProcess")
         self.lblVideoName = QtWidgets.QLabel(self.centralwidget)
-        self.lblVideoName.setGeometry(QtCore.QRect(39, 120, 130, 31))
+        self.lblVideoName.setGeometry(QtCore.QRect(39, 120, 621, 31))
         font = QtGui.QFont()
         font.setFamily("Open Sans")
         font.setPointSize(8)
@@ -587,6 +596,10 @@ class Ui_manualWindow(object):
         self.verticalScrollBarSnaps.setGeometry(QtCore.QRect(640, 310, 20, 201))
         self.verticalScrollBarSnaps.setOrientation(QtCore.Qt.Vertical)
         self.verticalScrollBarSnaps.setObjectName("verticalScrollBarSnaps")
+        self.lblLoadImage = QtWidgets.QLabel(self.centralwidget)
+        self.lblLoadImage.setGeometry(QtCore.QRect(40, 242, 451, 271))
+        self.lblLoadImage.setText("")
+        self.lblLoadImage.setObjectName("lblLoadImage")
         manualWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(manualWindow)
         self.statusbar.setObjectName("statusbar")
@@ -594,6 +607,7 @@ class Ui_manualWindow(object):
 
         self.retranslateUi(manualWindow)
         QtCore.QMetaObject.connectSlotsByName(manualWindow)
+        print("hg")
 
     def retranslateUi(self, manualWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -615,35 +629,34 @@ class Ui_manualWindow(object):
 
     def openFileNameDialog(self):
         print("File is being uploaded...")
-        #global manualWindow, ui
-        #fileName = QFileDialog.getOpenFileName(None)
-        #print(fileName[0])
-        #ui.lblVideoName.setText(str(fileName[0]))
-        ###MHS
-        options = QtWidgets.QFileDialog.Options()
-        options |= QtWidgets.QFileDialog.DontUseNativeDialog
-        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(
-            None,
-            "QFileDialog.getOpenFileName()",
-            "",
-            "All Files (*);;Python Files (*.py)",
-            options=options)
-        print(fileName)
-        videoName = ntpath.basename(fileName)
-        self.lblVideoName.setText(videoName)
-        #self.progrezz()
-
-
+        global manualWindow, ui
+        fileName = QFileDialog.getOpenFileName(None)
+        print(fileName[0])
+        ui.lblVideoName.setText(str(fileName[0]))
 
     def startIntubation(self):
-            print("Process started...")
+        print("Process is being started...")
+        thread = Thread(target=self.threaded_function, args=())
+        thread.start()
+
+    def threaded_function(self):
+        for i in range (100):
+            print(self.thread_exit)
+            if self.thread_exit:
+                return
+            self.lblTubePosition.setText(str(i))
+            print(i, self.thread_exit)
+
+            pixmap = QPixmap('C:\\Users\\Sandunika\\Downloads\\img\\{n}.jpg'.format(n=str((i % 5) + 1)))
+            self.lblLoadImage.setPixmap(pixmap)
+            time.sleep(1)
 
 
-    def saveImage(self):
-        print("Image is saved...")
 
-if __name__ == "__main__":
-    import sys
+
+def main():
+
+    print("jhgj")
     app = QtWidgets.QApplication(sys.argv)
     manualWindow = QtWidgets.QMainWindow()
     ui = Ui_manualWindow()
@@ -651,3 +664,15 @@ if __name__ == "__main__":
     manualWindow.show()
     sys.exit(app.exec_())
 
+"""if __name__ == "__main__":
+    import sys
+    print("jhgj")
+    app = QtWidgets.QApplication(sys.argv)
+    manualWindow = QtWidgets.QMainWindow()
+    ui = Ui_manualWindow()
+    ui.setupUi(manualWindow)
+    manualWindow.show()
+    sys.exit(app.exec_())
+"""
+#startfunction()
+#main()
