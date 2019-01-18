@@ -9,12 +9,18 @@ import time
 from threading import Thread
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap,QImage
 from PyQt5.QtWidgets import QFileDialog
+import cv2
 
 import sys
 
 import ntpath
+
+
+sys.path.insert(0, '../')
+
+import label2
 
 class Ui_manualWindow(object):
 
@@ -221,7 +227,7 @@ class Ui_manualWindow(object):
 "     background-color: #4DB6AC;\n"
 "     width: 24%;\n"
 " }")
-        self.progressBarFileUpload.setProperty("value", 24)
+        self.progressBarFileUpload.setProperty("value", 0)
         self.progressBarFileUpload.setObjectName("progressBarFileUpload")
         self.progressBarSnapshots = QtWidgets.QProgressBar(self.centralwidget)
         self.progressBarSnapshots.setGeometry(QtCore.QRect(529, 280, 131, 16))
@@ -289,7 +295,7 @@ class Ui_manualWindow(object):
 "     background-color: #4DB6AC;\n"
 "     width: 24%;\n"
 " }")
-        self.progressBarSnapshots.setProperty("value", 24)
+        self.progressBarSnapshots.setProperty("value", 0)
         self.progressBarSnapshots.setObjectName("progressBarSnapshots")
         self.line_3 = QtWidgets.QFrame(self.centralwidget)
         self.line_3.setGeometry(QtCore.QRect(-1, 550, 701, 41))
@@ -655,27 +661,58 @@ class Ui_manualWindow(object):
 
     def startIntubation(self):
         print("Process is being started...")
+        thread2 = Thread(target=self.runvideo, args=())
+        thread2.start()
+
+        time.sleep(5)
+
         thread = Thread(target=self.threaded_function, args=())
         thread.start()
 
+
+
+
+        #print("Process started...")
+        #running = True;
+        #run = label2.prediction()
+        #run.main2()
+
+    def runvideo(self):
+        self.run = label2.prediction()
+        self.run.main2()
+
+
+
+
+
+
     def threaded_function(self):
-        for i in range (100):
-            print(self.thread_exit)
+        for i in range (10000):
+
             if self.thread_exit:
                 return
             self.lblTubePosition.setText(str(i))
-            print(i, self.thread_exit)
+            print(self.run.queue)
 
-            pixmap = QPixmap('C:\\Users\\Sandunika\\Downloads\\img\\{n}.jpg'.format(n=str((i % 5) + 1)))
-            self.lblLoadImage.setPixmap(pixmap)
-            time.sleep(1)
+            if(self.run.queue.isEmpty()==False):
+                img = cv2.cvtColor(self.run.queue.dequeue(), cv2.COLOR_RGB2BGR)
+                #cv2.imshow("kjkj",img)
+                height, width, channel = img.shape
+                bytesPerLine = 3 * width
+                qImg = QtGui.QImage(img.data, width, height, bytesPerLine, QImage.Format_RGB888)
+
+                pixmap = QPixmap(qImg)
+
+            #pixmap = QPixmap('C:\\Users\\Sandunika\\Downloads\\img\\{n}.jpg'.format(n=str((i % 5) + 1)))
+                self.lblLoadImage.setPixmap(pixmap)
+                time.sleep(1)
 
 
 
 
 def main():
 
-    print("jhgj")
+
     app = QtWidgets.QApplication(sys.argv)
     manualWindow = QtWidgets.QMainWindow()
     ui = Ui_manualWindow()
