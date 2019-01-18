@@ -14,6 +14,7 @@ from PyQt5.QtWidgets import QFileDialog
 
 import sys
 
+import ntpath
 
 class Ui_manualWindow(object):
 
@@ -629,10 +630,19 @@ class Ui_manualWindow(object):
 
     def openFileNameDialog(self):
         print("File is being uploaded...")
-        global manualWindow, ui
-        fileName = QFileDialog.getOpenFileName(None)
-        print(fileName[0])
-        ui.lblVideoName.setText(str(fileName[0]))
+        options = QtWidgets.QFileDialog.Options()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(
+                None,
+                "QFileDialog.getOpenFileName()",
+                "",
+                "All Files (*);;Python Files (*.py)",
+                options=options)
+        print(fileName)
+        videoName = ntpath.basename(fileName)
+        print(videoName)
+        self.lblVideoName.setText(videoName)
+        #self.progrezz()
 
     def startIntubation(self):
         print("Process is being started...")
