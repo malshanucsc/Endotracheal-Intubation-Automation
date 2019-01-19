@@ -123,6 +123,25 @@ class prediction:
         direction_output = self.getNextDirection(file_name, "forward")
         self.output_location=file_name
 
+        if(direction_output==1):
+            self.navigation_message="Move forward with downward thrust"
+        elif(direction_output==2):
+            self.navigation_message="Wait for few seconds till location 4 is stable"
+        elif(direction_output==3):
+            self.navigation_message="Stop. Move 1cm back"
+        elif(direction_output==4):
+            self.navigation_message="Move center pixels towards black hole"
+        elif(direction_output==5):
+            self.navigation_message="Move forward with extreme slow"
+        elif(direction_output==6):
+            self.navigation_message="Stop move 2cm back"
+        elif(direction_output==7):
+            self.navigation_message="Move forward"
+        elif(direction_output==8):
+            self.navigation_message="Move backward with upward thrust"
+        elif(direction_output==9):
+            self.navigation_message="Move backward"
+
         #print(file_name)
         #self.count+=1
 
@@ -248,24 +267,6 @@ class prediction:
                 # print(g)
         #print(str(self.count) + "   " + str(self.first_pointer))
 
-        """if(direction_output==1):
-            print("Move forward with downward thrust")
-        elif(direction_output==2):
-            print("Wait for few seconds till location 4 is stable")
-        elif(direction_output==3):
-            print("Stop. Move 1cm back")
-        elif(direction_output==4):
-            print("Move center pixels towards black hole")
-        elif(direction_output==5):
-            print("Move forward with extreme slow")
-        elif(direction_output==6):
-            print("Stop move 2cm back")
-        elif(direction_output==7):
-            print("Move forward")
-        elif(direction_output==8):
-            print("Move backward with upward thrust")
-        elif(direction_output==9):
-            print("Move backward")"""
 
         new_direction = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/directions/new/" + str(
             direction_output) + ".jpg"
@@ -286,7 +287,7 @@ class prediction:
 
         self.vis = self.img2
 
-        write_name = "newdemo/" + str(self.count) + ".jpg"
+        write_name = "surf_images/" + str(self.count) + ".jpg"
         self.count += 1
 
 
@@ -311,7 +312,7 @@ class prediction:
 
 
         #cv2.imshow("Prediction", self.vis)
-        #cv2.imwrite(write_name, vis)
+        #cv2.imwrite(write_name, self.vis)
         # time.sleep(0.001)
 
     def readframe_func(self):
@@ -405,7 +406,10 @@ class prediction:
                     highest_value_index = 10
                 elif (highest_value_index == 0):
                     highest_value_index = 1
-                if (results[original_highest_value_index] > 0.85):
+
+
+                if (results[original_highest_value_index] > 0.7 ):
+
 
                     if ((self.current_location + 1 == highest_value_index) or (
                             self.current_location - 1 == highest_value_index)):
@@ -444,6 +448,7 @@ class prediction:
         # file_name = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/frame1008.jpg"
 
     def main2(self):
+        print("start main in prediction")
 
         self.model_file = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_graph.pb"
         self.label_file = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/tmp/output_labels.txt"
@@ -458,7 +463,7 @@ class prediction:
         self.output_layer = "final_result"
         self.graph = self.load_graph(self.model_file)
         #print(sys.getsizeof(self.graph))
-        self.current_location = 5
+        self.current_location = 1
         self.old_location_for_direction = 1
         self.count = 6113
         self.location = ""

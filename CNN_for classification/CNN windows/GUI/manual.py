@@ -7,11 +7,33 @@
 # WARNING! All changes made in this file will be lost!
 
 import ntpath
+import time
+from threading import Thread
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap,QImage
+
+import cv2
+
+import sys
+
+from PyQt5.QtWidgets import QGraphicsScene, QGraphicsPixmapItem
+
+sys.path.insert(0, '../')
+
+import label2
+
+
+
+
 
 class Ui_manualWindow(object):
+    def __init__(self):
+        self.thread_exit = False
+        self.UICount = 0
+        self.scene = QGraphicsScene();
+        self.imagelist=[]
+
     def setupUi(self, manualWindow):
         manualWindow.setObjectName("manualWindow")
         manualWindow.resize(844, 863)
@@ -318,6 +340,7 @@ class Ui_manualWindow(object):
 "   background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #02695F, stop: 0.1 #02695F, stop: 0.5 #02695F, stop: 0.9 #02695F, stop: 1 #02695F);\n"
 "}")
         self.btnSaveSnapshot.setObjectName("btnSaveSnapshot")
+        self.btnSaveSnapshot.clicked.connect(self.saveImage)
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
         self.label_2.setGeometry(QtCore.QRect(39, 60, 421, 31))
         font = QtGui.QFont()
@@ -335,7 +358,7 @@ class Ui_manualWindow(object):
         self.btnStartProcess = QtWidgets.QPushButton(self.centralwidget)
         self.btnStartProcess.setEnabled(True)
         self.btnStartProcess.setGeometry(QtCore.QRect(670, 190, 161, 31))
-        self.btnStartProcess.clicked.connect(self.startProcess)
+        self.btnStartProcess.clicked.connect(self.startIntubation)
         font = QtGui.QFont()
         font.setFamily("Open Sans")
         font.setPointSize(10)
@@ -609,10 +632,86 @@ class Ui_manualWindow(object):
         self.lblVideoName.setText(videoName)
         self.progrezz()
 
-    def startProcess(self):
-        print("process is being started...")
-        pixmap = QPixmap("C:\\Users\\Sandunika\\Desktop\\size.jpg")
-        self.lblLoadImage.setPixmap(pixmap)
+    def saveImage(self):
+        save_name="E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/Snapshots/"+str(time.time())+".jpg"
+        save_img = cv2.cvtColor(self.display_img, cv2.COLOR_BGR2RGB)
+        cv2.imwrite(save_name,save_img)
+
+
+
+
+
+        r = 150.0 / self.display_img.shape[1]
+        dim = (150, int(self.display_img.shape[0] * r))
+
+        # perform the actual resizing of the image and show it
+        resized_save_image = cv2.resize(self.display_img, dim, interpolation=cv2.INTER_AREA)
+
+
+        #resized_save_image=cv2.resize(self.display_img,(175,100))
+
+        save_height, save_width, save_channel = resized_save_image.shape
+        bytesPerLine = 3 * save_width
+        save_qImg = QtGui.QImage(resized_save_image.data, save_width, save_height, bytesPerLine, QImage.Format_RGB888)
+
+        item = QGraphicsPixmapItem(QPixmap(save_qImg))
+        self.scene.addItem(item)
+        #print(self.scene)
+        self.viewSavedSnaps.setScene(self.scene)
+
+
+
+    def startIntubation(self):
+        print("Process is being started...")
+        thread2 = Thread(target=self.runvideo, args=())
+        thread2.start()
+        self.run.video_file = self.fileName
+
+        time.sleep(1)
+
+        thread = Thread(target=self.threaded_function, args=())
+
+        if self.UICount == 1:
+
+            thread.start()
+
+
+
+
+    def runvideo(self):
+        self.run = label2.prediction()
+        self.UICount = 1
+
+        # print(self.run.video_file)
+
+        self.run.main2()
+
+
+    def threaded_function(self):
+
+        while (True):
+            if self.thread_exit:
+                return
+
+            if(isinstance(str(self.run.output_location),str)):
+                self.lblTubePosition.setText(str(self.run.output_location))
+            if(isinstance(self.run.navigation_message,str)):
+                self.lblNavigation.setText(self.run.navigation_message)
+
+
+            if (self.run.queue.isEmpty() == False):
+
+                self.display_img = cv2.cvtColor(self.run.queue.dequeue(), cv2.COLOR_RGB2BGR)
+                # cv2.imshow("kjkj",img)
+                height, width, channel = self.display_img.shape
+                bytesPerLine = 3 * width
+                qImg = QtGui.QImage(self.display_img.data, width, height, bytesPerLine, QImage.Format_RGB888)
+
+                pixmap = QPixmap(qImg)
+
+                # pixmap = QPixmap('C:\\Users\\Sandunika\\Downloads\\img\\{n}.jpg'.format(n=str((i % 5) + 1)))
+                self.lblLoadImage.setPixmap(pixmap)
+                time.sleep(0.1)
 
 
 if __name__ == "__main__":
