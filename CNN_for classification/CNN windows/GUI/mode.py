@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'selection.ui'
+# Form implementation generated from reading ui file 'mode.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.2
 #
@@ -8,11 +8,37 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox
-
 from manual import Ui_manualWindow
 from automatic import Ui_autoWindow
 
 class Ui_selectWindow(object):
+
+    def clickProceed(self):
+        print("Proceed is clicked")
+        if self.radioBtnManual.isChecked() == True:
+            print("Manual is checked")
+            self.window = QtWidgets.QMainWindow()
+            self.ui = Ui_manualWindow()
+            self.ui.setupUi(self.window)
+            self.window.show()
+        elif self.radioBtnAuto.isChecked() == True:
+            print("Auto is checked")
+            self.window = QtWidgets.QMainWindow()
+            self.ui = Ui_autoWindow()
+            self.ui.setupUi(self.window)
+            self.window.show()
+        else:
+            self.showMessagebox('Warning', 'Select the Intubation Mode')
+
+    def showMessagebox(self, title, message):
+        print("oops")
+        messageBox = QtWidgets.QMessageBox()
+        messageBox.setIcon(QMessageBox.Warning)
+        messageBox.setWindowTitle("Warning")
+        messageBox.setText("Please Select an Intubation Mode")
+        messageBox.setStandardButtons(QMessageBox.Ok)
+        messageBox.exec()
+
     def setupUi(self, selectWindow):
         selectWindow.setObjectName("selectWindow")
         selectWindow.resize(698, 588)
@@ -79,6 +105,7 @@ class Ui_selectWindow(object):
 "{\n"
 "   background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #02695F, stop: 0.1 #02695F, stop: 0.5 #02695F, stop: 0.9 #02695F, stop: 1 #02695F);\n"
 "}")
+        self.btnProceed.setAutoDefault(True)
         self.btnProceed.setObjectName("btnProceed")
         self.label_8 = QtWidgets.QLabel(self.centralwidget)
         self.label_8.setGeometry(QtCore.QRect(0, 550, 701, 21))
@@ -139,6 +166,9 @@ class Ui_selectWindow(object):
 
         self.retranslateUi(selectWindow)
         QtCore.QMetaObject.connectSlotsByName(selectWindow)
+        selectWindow.setTabOrder(self.radioBtnManual, self.radioBtnAuto)
+        selectWindow.setTabOrder(self.radioBtnAuto, self.btnProceed)
+        selectWindow.setTabOrder(self.btnProceed, self.graphicsView_3)
 
     def retranslateUi(self, selectWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -149,32 +179,6 @@ class Ui_selectWindow(object):
         self.label_2.setText(_translate("selectWindow", "PLEASE SELECT THE MODE"))
         self.radioBtnManual.setText(_translate("selectWindow", "Manual Intubation Process"))
         self.radioBtnAuto.setText(_translate("selectWindow", "Automatic Intubation Process"))
-
-    def clickProceed(self):
-        print("Proceed is clicked")
-        if self.radioBtnManual.isChecked() == True:
-            print("Manual is checked")
-            self.window = QtWidgets.QMainWindow()
-            self.ui = Ui_manualWindow()
-            self.ui.setupUi(self.window)
-            self.window.show()
-        elif self.radioBtnAuto.isChecked() == True:
-            print("Auto is checked")
-            self.window = QtWidgets.QMainWindow()
-            self.ui = Ui_autoWindow()
-            self.ui.setupUi(self.window)
-            self.window.show()
-        else:
-            self.showMessagebox('Warning', 'Select the Intubation Mode')
-
-    def showMessagebox(self, title, message):
-        print("oops")
-        messageBox = QtWidgets.QMessageBox()
-        messageBox.setIcon(QMessageBox.Warning)
-        messageBox.setWindowTitle("Warning")
-        messageBox.setText("Please Select an Intubation Mode")
-        messageBox.setStandardButtons(QMessageBox.Ok)
-        messageBox.exec()
 
 
 if __name__ == "__main__":

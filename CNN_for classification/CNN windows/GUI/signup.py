@@ -1,71 +1,46 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'login.ui'
+# Form implementation generated from reading ui file 'signup.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.2
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMessageBox
-from mode import Ui_selectWindow
-from signup import Ui_signUpWindow
 import sqlite3
 
-class Ui_loginWindow(object):
+class Ui_signUpWindow(object):
 
-    def showMessagebox(self, title, message):
-        print("Invalid User")
-        messageBox = QtWidgets.QMessageBox()
-        messageBox.setIcon(QMessageBox.Warning)
-        messageBox.setWindowTitle("Warning")
-        messageBox.setText(message)
-        messageBox.setStandardButtons(QMessageBox.Ok)
-        messageBox.exec()
-
-    def loginCheck(self):
-        print("Login Button Clicked! ")
+    def insertData(self):
         username = self.inputUsername.text()
+        email = self.inputEmailID.text()
         password = self.inputPassword.text()
 
         connection = sqlite3.connect("login.db")
-        result = connection.execute("SELECT * FROM USERS WHERE USERNAME = ? AND PASSWORD = ?", (username, password))
-        if (len(result.fetchall()) > 0):
-            print("User Found !")
-            loginWindow.hide()
-            self.mode_window = QtWidgets.QMainWindow()
-            self.ui = Ui_selectWindow()
-            self.ui.setupUi(self.mode_window)
-            self.mode_window.show()
-        else:
-            print("User Not Found!")
-            self.showMessagebox('Warning', 'Credentials are Incorrect')
-            self.inputUsername.setText("")
-            self.inputPassword.setText("")
+        connection.execute("INSERT INTO USERS VALUES(?,?,?)", (username, email, password))
+        connection.commit()
+        connection.close()
+        self.inputUsername.setText("")
+        self.inputEmailID.setText("")
+        password = self.inputPassword.setText("")
 
-    def signUpCheck(self):
-        print("Sign Up Button Clicked! ")
-        self.signup_window = QtWidgets.QMainWindow()
-        self.ui = Ui_signUpWindow()
-        self.ui.setupUi(self.signup_window)
-        self.signup_window.show()
 
-    def setupUi(self, loginWindow):
-        loginWindow.setObjectName("loginWindow")
-        loginWindow.resize(700, 591)
-        self.centralwidget = QtWidgets.QWidget(loginWindow)
+    def setupUi(self, signUpWindow):
+        signUpWindow.setObjectName("signUpWindow")
+        signUpWindow.resize(700, 591)
+        self.centralwidget = QtWidgets.QWidget(signUpWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.btnLogin = QtWidgets.QPushButton(self.centralwidget)
-        self.btnLogin.setEnabled(True)
-        self.btnLogin.setGeometry(QtCore.QRect(290, 350, 91, 31))
-        self.btnLogin.clicked.connect(self.loginCheck)
+        self.btnOk = QtWidgets.QPushButton(self.centralwidget)
+        self.btnOk.setEnabled(True)
+        self.btnOk.setGeometry(QtCore.QRect(290, 400, 91, 31))
+        self.btnOk.clicked.connect(self.insertData)
         font = QtGui.QFont()
         font.setFamily("Open Sans")
         font.setPointSize(10)
         font.setBold(True)
         font.setWeight(75)
-        self.btnLogin.setFont(font)
-        self.btnLogin.setStyleSheet("QPushButton\n"
+        self.btnOk.setFont(font)
+        self.btnOk.setStyleSheet("QPushButton\n"
 "{\n"
 "    color: #fff;\n"
 "    background-color: #00796B;\n"
@@ -89,11 +64,11 @@ class Ui_loginWindow(object):
 "{\n"
 "   background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #02695F, stop: 0.1 #02695F, stop: 0.5 #02695F, stop: 0.9 #02695F, stop: 1 #02695F);\n"
 "}")
-        self.btnLogin.setAutoDefault(True)
-        self.btnLogin.setDefault(False)
-        self.btnLogin.setObjectName("btnLogin")
+        self.btnOk.setAutoDefault(True)
+        self.btnOk.setDefault(False)
+        self.btnOk.setObjectName("btnOk")
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
-        self.label_2.setGeometry(QtCore.QRect(220, 170, 281, 31))
+        self.label_2.setGeometry(QtCore.QRect(260, 170, 281, 31))
         font = QtGui.QFont()
         font.setFamily("Open Sans")
         font.setPointSize(11)
@@ -135,7 +110,7 @@ class Ui_loginWindow(object):
         self.label_8.setAlignment(QtCore.Qt.AlignCenter)
         self.label_8.setObjectName("label_8")
         self.label_4 = QtWidgets.QLabel(self.centralwidget)
-        self.label_4.setGeometry(QtCore.QRect(210, 300, 141, 21))
+        self.label_4.setGeometry(QtCore.QRect(210, 350, 141, 21))
         font = QtGui.QFont()
         font.setFamily("Open Sans")
         font.setPointSize(10)
@@ -144,7 +119,7 @@ class Ui_loginWindow(object):
         self.label_4.setFont(font)
         self.label_4.setObjectName("label_4")
         self.inputPassword = QtWidgets.QLineEdit(self.centralwidget)
-        self.inputPassword.setGeometry(QtCore.QRect(290, 290, 201, 31))
+        self.inputPassword.setGeometry(QtCore.QRect(290, 340, 201, 31))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.inputPassword.setFont(font)
@@ -199,7 +174,7 @@ class Ui_loginWindow(object):
 "")
         self.inputUsername.setObjectName("inputUsername")
         self.graphicsView_3 = QtWidgets.QGraphicsView(self.centralwidget)
-        self.graphicsView_3.setGeometry(QtCore.QRect(180, 160, 341, 251))
+        self.graphicsView_3.setGeometry(QtCore.QRect(180, 160, 341, 281))
         self.graphicsView_3.setStyleSheet("QGraphicsView\n"
 "{\n"
 "    color: #fff;\n"
@@ -211,17 +186,16 @@ class Ui_loginWindow(object):
 "}\n"
 "")
         self.graphicsView_3.setObjectName("graphicsView_3")
-        self.btnSignUp = QtWidgets.QPushButton(self.centralwidget)
-        self.btnSignUp.setEnabled(True)
-        self.btnSignUp.setGeometry(QtCore.QRect(400, 350, 91, 31))
-        self.btnSignUp.clicked.connect(self.signUpCheck)
+        self.btnCancel = QtWidgets.QPushButton(self.centralwidget)
+        self.btnCancel.setEnabled(True)
+        self.btnCancel.setGeometry(QtCore.QRect(400, 400, 91, 31))
         font = QtGui.QFont()
         font.setFamily("Open Sans")
         font.setPointSize(10)
         font.setBold(True)
         font.setWeight(75)
-        self.btnSignUp.setFont(font)
-        self.btnSignUp.setStyleSheet("QPushButton\n"
+        self.btnCancel.setFont(font)
+        self.btnCancel.setStyleSheet("QPushButton\n"
 "{\n"
 "    color: #fff;\n"
 "    background-color: #00796B;\n"
@@ -245,11 +219,36 @@ class Ui_loginWindow(object):
 "{\n"
 "   background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #02695F, stop: 0.1 #02695F, stop: 0.5 #02695F, stop: 0.9 #02695F, stop: 1 #02695F);\n"
 "}")
-        self.btnSignUp.setAutoDefault(True)
-        self.btnSignUp.setDefault(False)
-        self.btnSignUp.setObjectName("btnSignUp")
+        self.btnCancel.setAutoDefault(True)
+        self.btnCancel.setDefault(False)
+        self.btnCancel.setObjectName("btnCancel")
+        self.inputEmailID = QtWidgets.QLineEdit(self.centralwidget)
+        self.inputEmailID.setGeometry(QtCore.QRect(290, 290, 201, 31))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.inputEmailID.setFont(font)
+        self.inputEmailID.setAutoFillBackground(False)
+        self.inputEmailID.setStyleSheet("QLineEdit\n"
+"{  \n"
+"    border-width:2px;\n"
+"    border-color: #00796B;\n"
+"    border-style: solid;\n"
+"    border-radius: 2px;\n"
+"}\n"
+"")
+        self.inputEmailID.setObjectName("inputEmailID")
+        self.label_5 = QtWidgets.QLabel(self.centralwidget)
+        self.label_5.setGeometry(QtCore.QRect(210, 300, 141, 21))
+        font = QtGui.QFont()
+        font.setFamily("Open Sans")
+        font.setPointSize(10)
+        font.setBold(False)
+        font.setWeight(50)
+        self.label_5.setFont(font)
+        self.label_5.setTextInteractionFlags(QtCore.Qt.TextEditorInteraction)
+        self.label_5.setObjectName("label_5")
         self.graphicsView_3.raise_()
-        self.btnLogin.raise_()
+        self.btnOk.raise_()
         self.label_2.raise_()
         self.label_3.raise_()
         self.label_8.raise_()
@@ -259,37 +258,41 @@ class Ui_loginWindow(object):
         self.label.raise_()
         self.line_3.raise_()
         self.inputUsername.raise_()
-        self.btnSignUp.raise_()
-        loginWindow.setCentralWidget(self.centralwidget)
-        self.statusbar = QtWidgets.QStatusBar(loginWindow)
+        self.btnCancel.raise_()
+        self.inputEmailID.raise_()
+        self.label_5.raise_()
+        signUpWindow.setCentralWidget(self.centralwidget)
+        self.statusbar = QtWidgets.QStatusBar(signUpWindow)
         self.statusbar.setObjectName("statusbar")
-        loginWindow.setStatusBar(self.statusbar)
+        signUpWindow.setStatusBar(self.statusbar)
 
-        self.retranslateUi(loginWindow)
-        QtCore.QMetaObject.connectSlotsByName(loginWindow)
-        loginWindow.setTabOrder(self.inputUsername, self.inputPassword)
-        loginWindow.setTabOrder(self.inputPassword, self.btnLogin)
-        loginWindow.setTabOrder(self.btnLogin, self.btnSignUp)
-        loginWindow.setTabOrder(self.btnSignUp, self.graphicsView_3)
+        self.retranslateUi(signUpWindow)
+        QtCore.QMetaObject.connectSlotsByName(signUpWindow)
+        signUpWindow.setTabOrder(self.inputUsername, self.inputEmailID)
+        signUpWindow.setTabOrder(self.inputEmailID, self.inputPassword)
+        signUpWindow.setTabOrder(self.inputPassword, self.btnOk)
+        signUpWindow.setTabOrder(self.btnOk, self.btnCancel)
+        signUpWindow.setTabOrder(self.btnCancel, self.graphicsView_3)
 
-    def retranslateUi(self, loginWindow):
+    def retranslateUi(self, signUpWindow):
         _translate = QtCore.QCoreApplication.translate
-        loginWindow.setWindowTitle(_translate("loginWindow", "Login"))
-        self.btnLogin.setText(_translate("loginWindow", "Login"))
-        self.label_2.setText(_translate("loginWindow", "PLEASE ENTER THE LOGIN DETAILS"))
-        self.label_3.setText(_translate("loginWindow", "INTUBATION PROCESS"))
-        self.label_8.setText(_translate("loginWindow", "All Right Reserved"))
-        self.label_4.setText(_translate("loginWindow", "Password"))
-        self.label.setText(_translate("loginWindow", "Username"))
-        self.btnSignUp.setText(_translate("loginWindow", "SignUp"))
+        signUpWindow.setWindowTitle(_translate("signUpWindow", "SignUp"))
+        self.btnOk.setText(_translate("signUpWindow", "Ok"))
+        self.label_2.setText(_translate("signUpWindow", "CREATE NEW ACCOUNT"))
+        self.label_3.setText(_translate("signUpWindow", "INTUBATION PROCESS"))
+        self.label_8.setText(_translate("signUpWindow", "All Right Reserved"))
+        self.label_4.setText(_translate("signUpWindow", "Password"))
+        self.label.setText(_translate("signUpWindow", "Username"))
+        self.btnCancel.setText(_translate("signUpWindow", "Cancel"))
+        self.label_5.setText(_translate("signUpWindow", "Email ID"))
 
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    loginWindow = QtWidgets.QMainWindow()
-    ui = Ui_loginWindow()
-    ui.setupUi(loginWindow)
-    loginWindow.show()
+    signUpWindow = QtWidgets.QMainWindow()
+    ui = Ui_signUpWindow()
+    ui.setupUi(signUpWindow)
+    signUpWindow.show()
     sys.exit(app.exec_())
 
