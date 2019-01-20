@@ -619,9 +619,16 @@ class Ui_manualWindow(object):
 
     def progrezz(self):
         self.completed = 0
+        if str(self.lblVideoName.text()) != "" :
+            while self.completed < 100:
+                self.completed += 0.0001
+                self.progressBarFileUpload.setValue(self.completed)
+
+    def saveImageProgrezz(self):
+        self.completed = 0
         while self.completed < 100:
             self.completed += 0.0001
-            self.progressBarFileUpload.setValue(self.completed)
+            self.progressBarSnapshots.setValue(self.completed)
 
     def openFileNameDialog(self):
         print("File is being uploaded...")
@@ -658,6 +665,7 @@ class Ui_manualWindow(object):
         self.scene.addItem(item)
         #print(self.scene)
         self.viewSavedSnaps.setScene(self.scene)
+        self.saveImageProgrezz()
 
 
 
