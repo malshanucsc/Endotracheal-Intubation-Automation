@@ -118,6 +118,9 @@ QPushButton:pressed
     <property name="text">
      <string>Proceed</string>
     </property>
+    <property name="autoDefault">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QLabel" name="label_8">
     <property name="geometry">
@@ -247,6 +250,12 @@ QPushButton:pressed
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <tabstops>
+  <tabstop>radioBtnManual</tabstop>
+  <tabstop>radioBtnAuto</tabstop>
+  <tabstop>btnProceed</tabstop>
+  <tabstop>graphicsView_3</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

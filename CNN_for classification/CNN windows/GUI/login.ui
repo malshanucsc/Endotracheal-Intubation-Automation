@@ -20,8 +20,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>360</y>
+      <x>290</x>
+      <y>350</y>
       <width>91</width>
       <height>31</height>
      </rect>
@@ -62,6 +62,12 @@ QPushButton:pressed
     </property>
     <property name="text">
      <string>Login</string>
+    </property>
+    <property name="autoDefault">
+     <bool>true</bool>
+    </property>
+    <property name="default">
+     <bool>false</bool>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">
@@ -292,42 +298,6 @@ QPushButton:pressed
 </string>
     </property>
    </widget>
-   <widget class="QLabel" name="lblHelp">
-    <property name="geometry">
-     <rect>
-      <x>420</x>
-      <y>330</y>
-      <width>71</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Open Sans</family>
-      <pointsize>8</pointsize>
-      <weight>50</weight>
-      <italic>true</italic>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="focusPolicy">
-     <enum>Qt::NoFocus</enum>
-    </property>
-    <property name="styleSheet">
-     <string notr="true"> QLabel {
-   color:#9A9A9A;
- }</string>
-    </property>
-    <property name="inputMethodHints">
-     <set>Qt::ImhNone</set>
-    </property>
-    <property name="text">
-     <string>Need a help?</string>
-    </property>
-    <property name="textInteractionFlags">
-     <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse</set>
-    </property>
-   </widget>
    <widget class="QGraphicsView" name="graphicsView_3">
     <property name="geometry">
      <rect>
@@ -350,6 +320,62 @@ QPushButton:pressed
 </string>
     </property>
    </widget>
+   <widget class="QPushButton" name="btnSignUp">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>350</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Open Sans</family>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton
+{
+    color: #fff;
+    background-color: #00796B;
+    border-width:1px;
+    border-color: #00695C;
+    border-style: solid;
+    border-radius: 8px;
+    padding: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+
+
+QPushButton:hover
+{
+    background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #018175, stop: 0.1 #018175, stop: 0.5 #018175, stop: 0.9 #018175, stop: 1 #018175);
+}
+
+QPushButton:pressed
+{
+   background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #02695F, stop: 0.1 #02695F, stop: 0.5 #02695F, stop: 0.9 #02695F, stop: 1 #02695F);
+}</string>
+    </property>
+    <property name="text">
+     <string>SignUp</string>
+    </property>
+    <property name="autoDefault">
+     <bool>true</bool>
+    </property>
+    <property name="default">
+     <bool>false</bool>
+    </property>
+   </widget>
    <zorder>graphicsView_3</zorder>
    <zorder>btnLogin</zorder>
    <zorder>label_2</zorder>
@@ -361,10 +387,17 @@ QPushButton:pressed
    <zorder>label</zorder>
    <zorder>line_3</zorder>
    <zorder>inputUsername</zorder>
-   <zorder>lblHelp</zorder>
+   <zorder>btnSignUp</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <tabstops>
+  <tabstop>inputUsername</tabstop>
+  <tabstop>inputPassword</tabstop>
+  <tabstop>btnLogin</tabstop>
+  <tabstop>btnSignUp</tabstop>
+  <tabstop>graphicsView_3</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

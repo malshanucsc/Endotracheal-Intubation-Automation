@@ -8,10 +8,48 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox
-
 from mode import Ui_selectWindow
+from signup import Ui_signUpWindow
+import sqlite3
 
 class Ui_loginWindow(object):
+
+    def showMessagebox(self, title, message):
+        print("Invalid User")
+        messageBox = QtWidgets.QMessageBox()
+        messageBox.setIcon(QMessageBox.Warning)
+        messageBox.setWindowTitle("Warning")
+        messageBox.setText(message)
+        messageBox.setStandardButtons(QMessageBox.Ok)
+        messageBox.exec()
+
+    def loginCheck(self):
+        print("Login Button Clicked! ")
+        username = self.inputUsername.text()
+        password = self.inputPassword.text()
+
+        connection = sqlite3.connect("login.db")
+        result = connection.execute("SELECT * FROM USERS WHERE USERNAME = ? AND PASSWORD = ?", (username, password))
+        if (len(result.fetchall()) > 0):
+            print("User Found !")
+            loginWindow.hide()
+            self.mode_window = QtWidgets.QMainWindow()
+            self.ui = Ui_selectWindow()
+            self.ui.setupUi(self.mode_window)
+            self.mode_window.show()
+        else:
+            print("User Not Found!")
+            self.showMessagebox('Warning', 'Credentials are Incorrect')
+            self.inputUsername.setText("")
+            self.inputPassword.setText("")
+
+    def signUpCheck(self):
+        print("Sign Up Button Clicked! ")
+        self.signup_window = QtWidgets.QMainWindow()
+        self.ui = Ui_signUpWindow()
+        self.ui.setupUi(self.signup_window)
+        self.signup_window.show()
+
     def setupUi(self, loginWindow):
         loginWindow.setObjectName("loginWindow")
         loginWindow.resize(700, 591)
@@ -19,7 +57,7 @@ class Ui_loginWindow(object):
         self.centralwidget.setObjectName("centralwidget")
         self.btnLogin = QtWidgets.QPushButton(self.centralwidget)
         self.btnLogin.setEnabled(True)
-        self.btnLogin.setGeometry(QtCore.QRect(310, 360, 91, 31))
+        self.btnLogin.setGeometry(QtCore.QRect(290, 350, 91, 31))
         self.btnLogin.clicked.connect(self.loginCheck)
         font = QtGui.QFont()
         font.setFamily("Open Sans")
@@ -51,6 +89,8 @@ class Ui_loginWindow(object):
 "{\n"
 "   background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #02695F, stop: 0.1 #02695F, stop: 0.5 #02695F, stop: 0.9 #02695F, stop: 1 #02695F);\n"
 "}")
+        self.btnLogin.setAutoDefault(True)
+        self.btnLogin.setDefault(False)
         self.btnLogin.setObjectName("btnLogin")
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
         self.label_2.setGeometry(QtCore.QRect(220, 170, 281, 31))
@@ -158,22 +198,6 @@ class Ui_loginWindow(object):
 "}\n"
 "")
         self.inputUsername.setObjectName("inputUsername")
-        self.lblHelp = QtWidgets.QLabel(self.centralwidget)
-        self.lblHelp.setGeometry(QtCore.QRect(420, 330, 71, 21))
-        font = QtGui.QFont()
-        font.setFamily("Open Sans")
-        font.setPointSize(8)
-        font.setBold(False)
-        font.setItalic(True)
-        font.setWeight(50)
-        self.lblHelp.setFont(font)
-        self.lblHelp.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.lblHelp.setStyleSheet(" QLabel {\n"
-"   color:#9A9A9A;\n"
-" }")
-        self.lblHelp.setInputMethodHints(QtCore.Qt.ImhNone)
-        self.lblHelp.setTextInteractionFlags(QtCore.Qt.LinksAccessibleByKeyboard|QtCore.Qt.LinksAccessibleByMouse)
-        self.lblHelp.setObjectName("lblHelp")
         self.graphicsView_3 = QtWidgets.QGraphicsView(self.centralwidget)
         self.graphicsView_3.setGeometry(QtCore.QRect(180, 160, 341, 251))
         self.graphicsView_3.setStyleSheet("QGraphicsView\n"
@@ -187,6 +211,43 @@ class Ui_loginWindow(object):
 "}\n"
 "")
         self.graphicsView_3.setObjectName("graphicsView_3")
+        self.btnSignUp = QtWidgets.QPushButton(self.centralwidget)
+        self.btnSignUp.setEnabled(True)
+        self.btnSignUp.setGeometry(QtCore.QRect(400, 350, 91, 31))
+        self.btnSignUp.clicked.connect(self.signUpCheck)
+        font = QtGui.QFont()
+        font.setFamily("Open Sans")
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setWeight(75)
+        self.btnSignUp.setFont(font)
+        self.btnSignUp.setStyleSheet("QPushButton\n"
+"{\n"
+"    color: #fff;\n"
+"    background-color: #00796B;\n"
+"    border-width:1px;\n"
+"    border-color: #00695C;\n"
+"    border-style: solid;\n"
+"    border-radius: 8px;\n"
+"    padding: 2px;\n"
+"    padding-left: 5px;\n"
+"    padding-right: 5px;\n"
+"}\n"
+"\n"
+"\n"
+"\n"
+"QPushButton:hover\n"
+"{\n"
+"    background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #018175, stop: 0.1 #018175, stop: 0.5 #018175, stop: 0.9 #018175, stop: 1 #018175);\n"
+"}\n"
+"\n"
+"QPushButton:pressed\n"
+"{\n"
+"   background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #02695F, stop: 0.1 #02695F, stop: 0.5 #02695F, stop: 0.9 #02695F, stop: 1 #02695F);\n"
+"}")
+        self.btnSignUp.setAutoDefault(True)
+        self.btnSignUp.setDefault(False)
+        self.btnSignUp.setObjectName("btnSignUp")
         self.graphicsView_3.raise_()
         self.btnLogin.raise_()
         self.label_2.raise_()
@@ -198,7 +259,7 @@ class Ui_loginWindow(object):
         self.label.raise_()
         self.line_3.raise_()
         self.inputUsername.raise_()
-        self.lblHelp.raise_()
+        self.btnSignUp.raise_()
         loginWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(loginWindow)
         self.statusbar.setObjectName("statusbar")
@@ -206,6 +267,10 @@ class Ui_loginWindow(object):
 
         self.retranslateUi(loginWindow)
         QtCore.QMetaObject.connectSlotsByName(loginWindow)
+        loginWindow.setTabOrder(self.inputUsername, self.inputPassword)
+        loginWindow.setTabOrder(self.inputPassword, self.btnLogin)
+        loginWindow.setTabOrder(self.btnLogin, self.btnSignUp)
+        loginWindow.setTabOrder(self.btnSignUp, self.graphicsView_3)
 
     def retranslateUi(self, loginWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -216,30 +281,8 @@ class Ui_loginWindow(object):
         self.label_8.setText(_translate("loginWindow", "All Right Reserved"))
         self.label_4.setText(_translate("loginWindow", "Password"))
         self.label.setText(_translate("loginWindow", "Username"))
-        self.lblHelp.setText(_translate("loginWindow", "Need a help?"))
+        self.btnSignUp.setText(_translate("loginWindow", "SignUp"))
 
-    def loginCheck(self):
-        print("login button clicked")
-        username = self.inputUsername.text()
-        password = self.inputPassword.text()
-        if username == "admin" and password == "admin":
-            print("Login successfull...")
-            self.window = QtWidgets.QMainWindow()
-            self.ui = Ui_selectWindow()
-            self.ui.setupUi(self.window)
-            self.window.show()
-        else:
-            self.showMessagebox('Warning', 'Credentials are Incorrect')
-            self.inputUsername.setText("")
-            self.inputPassword.setText("")
-
-    def showMessagebox(self, title, message):
-        messageBox = QtWidgets.QMessageBox()
-        messageBox.setIcon(QMessageBox.Warning)
-        messageBox.setWindowTitle("Warning")
-        messageBox.setText(message)
-        messageBox.setStandardButtons(QMessageBox.Ok)
-        messageBox.exec()
 
 if __name__ == "__main__":
     import sys
