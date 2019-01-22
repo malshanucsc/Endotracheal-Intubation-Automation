@@ -308,7 +308,12 @@ class prediction:
         #h,w,g=self.vis.shape
         #print(h)
         #print(w)
-        self.queue.enqueue(self.vis)
+
+        detail_list=[]
+        detail_list.append(self.output_location)
+        detail_list.append(self.navigation_message)
+        detail_list.append(self.vis)
+        self.queue.enqueue(detail_list)
 
 
         #cv2.imshow("Prediction", self.vis)
