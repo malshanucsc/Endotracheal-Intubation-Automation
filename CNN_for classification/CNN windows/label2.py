@@ -50,6 +50,8 @@ count = 1
 
 
 class prediction:
+    def __init__(self):
+        self.queue = Queue.Queue()
     def load_graph(self, model_file):
         graph = tf.Graph()
         graph_def = tf.GraphDef()
@@ -313,6 +315,8 @@ class prediction:
         detail_list.append(self.output_location)
         detail_list.append(self.navigation_message)
         detail_list.append(self.vis)
+        detail_list.append(str(213-np.int32(self.x)))
+        detail_list.append(str(240.5-np.int32(self.y)))
         self.queue.enqueue(detail_list)
 
 
@@ -326,7 +330,7 @@ class prediction:
         #if(running==False):
         #return
 
-        with tf.Session(graph=self.graph) as sess:
+        with tf.Session(graph=self.graph) as self.sess:
 
             while self.cap.isOpened():
                 ret, self.img = self.cap.read()
@@ -362,7 +366,7 @@ class prediction:
                 normalized = tf.divide(tf.subtract(resized, [input_mean]), [input_std])
                 #print(normalized)
                 #sess = tf.Session()
-                t = sess.run(normalized)
+                t = self.sess.run(normalized)
 
 
 
@@ -394,7 +398,7 @@ class prediction:
                 #print(len(t))
 
 
-                results = sess.run(output_operation.outputs[0], {input_operation.outputs[0]: t})
+                results = self.sess.run(output_operation.outputs[0], {input_operation.outputs[0]: t})
 
                 #print(sys.getsizeof(sess))
 
@@ -473,7 +477,7 @@ class prediction:
         self.count = 6113
         self.location = ""
         self.direction = ""
-        self.queue=Queue.Queue()
+        #self.queue=Queue.Queue()
         # /media/cola/EDU
         #self.video_file = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/1.mp4"
         #"E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/5.mp4"

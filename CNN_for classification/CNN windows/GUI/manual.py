@@ -27,6 +27,8 @@ class Ui_manualWindow(object):
         self.UICount = 0
         self.scene = QGraphicsScene();
         self.imagelist=[]
+        self.fileName=""
+        self.started=False
 
     def setupUi(self, manualWindow):
         self.manualWindow = manualWindow
@@ -51,7 +53,7 @@ class Ui_manualWindow(object):
 "")
         self.viewTubeLocation.setObjectName("viewTubeLocation")
         self.btnEndProcess = QtWidgets.QPushButton(self.centralwidget)
-        self.btnEndProcess.setGeometry(QtCore.QRect(670, 770, 151, 21))
+        self.btnEndProcess.setGeometry(QtCore.QRect(100, 100, 151, 21))
         self.btnEndProcess.clicked.connect(self.endProcess)
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(0, 105, 92))
@@ -677,7 +679,7 @@ class Ui_manualWindow(object):
         self.progrezz()
 
     def saveImage(self):
-        save_name="D:/Academic/4th Year/1st Semester/Project SCS- 4123/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/Snapshots/"+str(time.time())+".jpg"
+        save_name="E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/Snapshots/"+str(time.time())+".jpg"
         save_img = cv2.cvtColor(self.display_img, cv2.COLOR_BGR2RGB)
         cv2.imwrite(save_name,save_img)
 
@@ -698,17 +700,27 @@ class Ui_manualWindow(object):
         self.saveImageProgrezz()
 
     def startIntubation(self):
-        print("Process is being started...")
-        thread2 = Thread(target=self.runvideo, args=())
-        thread2.start()
-        self.run.video_file = self.fileName
+        if(self.started):
+                print("End the Processs first")
+        else:
 
-        time.sleep(1)
 
-        thread = Thread(target=self.threaded_function, args=())
 
-        if self.UICount == 1:
-            thread.start()
+                if(self.fileName=="" or self.fileName is None ):
+                    print("No file selected")#messagebox
+                else:
+                    self.started = True
+                    print("Process is being started...")
+                    self.thread2 = Thread(target=self.runvideo, args=())
+                    self.thread2.start()
+                    self.run.video_file = self.fileName
+
+                    time.sleep(1)
+
+                    self.thread = Thread(target=self.threaded_function, args=())
+
+                    if self.UICount == 1:
+                        self.thread.start()
 
     def runvideo(self):
         self.run = label2.prediction()
@@ -718,7 +730,7 @@ class Ui_manualWindow(object):
     def threaded_function(self):
         while (True):
             if self.thread_exit:
-                return
+                break
 
             """if(isinstance(str(self.run.output_location),str)):
                 self.lblTubePosition.setText(str(self.run.output_location))
@@ -741,6 +753,21 @@ class Ui_manualWindow(object):
                     time.sleep(0.1)
 
     def endProcess(self):
+
+
+        if(self.started ):
+
+
+            self.thread_exit = True
+            #self.thread2._stop()
+            #self.thread._stop()
+            #print(self.run.sess)
+            #del self.run
+            del self.run.sess
+
+
+
+
         self.manualWindow.hide()
         self.newMode_window = QtWidgets.QMainWindow()
         self.ui = mode.Ui_selectWindow()

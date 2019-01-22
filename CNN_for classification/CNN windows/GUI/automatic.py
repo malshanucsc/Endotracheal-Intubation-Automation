@@ -5,11 +5,29 @@
 # Created by: PyQt5 UI code generator 5.11.2
 #
 # WARNING! All changes made in this file will be lost!
-
+from threading import Thread
+import time
+import cv2
+import sys
+from PyQt5.QtGui import QPixmap,QImage
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QGraphicsScene, QGraphicsPixmapItem
+import mode
+
+sys.path.insert(0, '../')
+import label2
+
 
 class Ui_autoWindow(object):
+    def __init__(self):
+        self.thread_exit = False
+        self.UICount = 0
+        self.scene = QGraphicsScene();
+        self.imagelist=[]
+        self.started = False
+
     def setupUi(self, autoWindow):
+        self.autoWindow=autoWindow
         autoWindow.setObjectName("autoWindow")
         autoWindow.resize(701, 611)
         autoWindow.setMinimumSize(QtCore.QSize(701, 611))
@@ -70,7 +88,7 @@ class Ui_autoWindow(object):
         self.label_5.setFont(font)
         self.label_5.setObjectName("label_5")
         self.viewTubeLocation = QtWidgets.QGraphicsView(self.centralwidget)
-        self.viewTubeLocation.setGeometry(QtCore.QRect(40, 240, 451, 271))
+        self.viewTubeLocation.setGeometry(QtCore.QRect(40, 240, 420, 271))
         self.viewTubeLocation.setStyleSheet("QGraphicsView\n"
 "{\n"
 "    color: #fff;\n"
@@ -191,6 +209,14 @@ class Ui_autoWindow(object):
         self.label_8.setObjectName("label_8")
         self.label_3 = QtWidgets.QLabel(self.centralwidget)
         self.label_3.setGeometry(QtCore.QRect(0, 0, 701, 51))
+
+        self.lblLoadImage = QtWidgets.QLabel(self.centralwidget)
+        self.lblLoadImage.setGeometry(QtCore.QRect(40, 240, 451, 271))
+        self.lblLoadImage.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.lblLoadImage.setText("")
+        self.lblLoadImage.setObjectName("lblLoadImage")
+
+
         font = QtGui.QFont()
         font.setFamily("Open Sans")
         font.setPointSize(14)
@@ -206,6 +232,7 @@ class Ui_autoWindow(object):
         self.btnStartProcess = QtWidgets.QPushButton(self.centralwidget)
         self.btnStartProcess.setEnabled(True)
         self.btnStartProcess.setGeometry(QtCore.QRect(530, 220, 131, 31))
+        self.btnStartProcess.clicked.connect(self.startIntubation)
         font = QtGui.QFont()
         font.setFamily("Open Sans")
         font.setPointSize(10)
@@ -260,6 +287,7 @@ class Ui_autoWindow(object):
         self.progressBarAuto.setObjectName("progressBarAuto")
         self.btnEndProcess = QtWidgets.QPushButton(self.centralwidget)
         self.btnEndProcess.setGeometry(QtCore.QRect(531, 520, 131, 21))
+        self.btnEndProcess.clicked.connect(self.endProcess)
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(0, 105, 92))
         brush.setStyle(QtCore.Qt.SolidPattern)
@@ -466,6 +494,7 @@ class Ui_autoWindow(object):
 "   background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #02695F, stop: 0.1 #02695F, stop: 0.5 #02695F, stop: 0.9 #02695F, stop: 1 #02695F);\n"
 "}")
         self.btnSaveSnaps.setObjectName("btnSaveSnaps")
+        self.btnSaveSnaps.clicked.connect(self.saveImage)
         self.lblTubePosition = QtWidgets.QLabel(self.centralwidget)
         self.lblTubePosition.setGeometry(QtCore.QRect(190, 210, 130, 31))
         font = QtGui.QFont()
@@ -493,7 +522,7 @@ class Ui_autoWindow(object):
         autoWindow.setWindowTitle(_translate("autoWindow", "Automatic Intubation"))
         self.label_4.setText(_translate("autoWindow", "CameraResource 001"))
         self.btnPause.setText(_translate("autoWindow", "Pause"))
-        self.label_5.setText(_translate("autoWindow", "Current Tube Position:"))
+        self.label_5.setText(_translate("autoWindow", "Tube x,y Movement:"))
         self.btnCancel.setText(_translate("autoWindow", "Cancel"))
         self.label_7.setText(_translate("autoWindow", "Genarating the images"))
         self.label_8.setText(_translate("autoWindow", "All Right Reserved"))
@@ -504,7 +533,110 @@ class Ui_autoWindow(object):
         self.label_2.setText(_translate("autoWindow", "CHOOSE THE VIDEO CAMERA RESOURCE HERE"))
         self.label.setText(_translate("autoWindow", "Configuring the camera"))
         self.btnSaveSnaps.setText(_translate("autoWindow", "Save Snapshot"))
-        self.lblTubePosition.setText(_translate("autoWindow", "Position"))
+        self.lblTubePosition.setText(_translate("autoWindow", ""))
+
+    def saveImageProgrezz(self):
+        self.completed = 0
+        while self.completed < 100:
+            self.completed += 0.0001
+            self.progressBarSnapshots.setValue(self.completed)
+
+    def saveImage(self):
+        save_name="E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/Snapshots/"+str(time.time())+".jpg"
+        save_img = cv2.cvtColor(self.display_img, cv2.COLOR_BGR2RGB)
+        cv2.imwrite(save_name,save_img)
+
+        r = 150.0 / self.display_img.shape[1]
+        dim = (150, int(self.display_img.shape[0] * r))
+
+        # perform the actual resizing of the image and show it
+        resized_save_image = cv2.resize(self.display_img, dim, interpolation=cv2.INTER_AREA)
+
+        save_height, save_width, save_channel = resized_save_image.shape
+        bytesPerLine = 3 * save_width
+        save_qImg = QtGui.QImage(resized_save_image.data, save_width, save_height, bytesPerLine, QImage.Format_RGB888)
+
+        item = QGraphicsPixmapItem(QPixmap(save_qImg))
+        self.scene.addItem(item)
+        #print(self.scene)
+        self.viewSavedSnaps.setScene(self.scene)
+        self.saveImageProgrezz()
+
+    def startIntubation(self):
+        if (self.started):
+            print("End the Processs first")
+        else:
+            self.started = True
+            print("Process is being started...")
+            self.thread2 = Thread(target=self.runvideo, args=())
+            self.thread2.start()
+            self.run.video_file = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sam2.mp4"
+
+            time.sleep(1)
+
+            self.thread = Thread(target=self.threaded_function, args=())
+
+            if self.UICount == 1:
+                self.thread.start()
+
+    def runvideo(self):
+        self.run = label2.prediction()
+        self.UICount = 1
+        self.run.main2()
+
+    def threaded_function(self):
+        while (True):
+            if self.thread_exit:
+                return
+
+            """if(isinstance(str(self.run.output_location),str)):
+                self.lblTubePosition.setText(str(self.run.output_location))
+            if(isinstance(self.run.navigation_message,str)):
+                self.lblNavigation.setText(self.run.navigation_message)"""
+
+            if(not(self.run.queue is None)):
+                if (self.run.queue.isEmpty() == False):
+                    list_obj=self.run.queue.dequeue()
+
+                    self.display_img = cv2.cvtColor(list_obj[2], cv2.COLOR_RGB2BGR)
+                    height, width, channel = self.display_img.shape
+                    midy=height/2
+                    midx=width/2
+                    xcor=list_obj[3]
+                    ycor=list_obj[4]
+
+
+
+                    #xs=str(xcor)
+                    #ys=str(ycor)
+                    string="x:  "+xcor+"  y: "+ycor
+                    #self.lblTubePosition.setText(string)
+                    print(string)
+                    #self.lblNavigation.setText(list_obj[1])
+
+
+
+                    bytesPerLine = 3 * width
+                    qImg = QtGui.QImage(self.display_img.data, width, height, bytesPerLine, QImage.Format_RGB888)
+                    pixmap = QPixmap(qImg)
+                    self.lblLoadImage.setPixmap(pixmap)
+                    time.sleep(0.1)
+
+    def endProcess(self):
+
+        if (self.started):
+            self.thread_exit = True
+            # self.thread2._stop()
+            # self.thread._stop()
+            #print(self.run.sess)
+            # del self.run
+            del self.run.sess
+
+        self.autoWindow.hide()
+        self.newMode_window = QtWidgets.QMainWindow()
+        self.ui = mode.Ui_selectWindow()
+        self.ui.setupUi(self.newMode_window)
+        self.newMode_window.show()
 
 
 if __name__ == "__main__":
