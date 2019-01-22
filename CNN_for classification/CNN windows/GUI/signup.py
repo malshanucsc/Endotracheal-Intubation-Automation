@@ -9,6 +9,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox
 import login
+from validate_email import validate_email
 import sqlite3
 
 class Ui_signUpWindow(object):
@@ -34,19 +35,25 @@ class Ui_signUpWindow(object):
         username = self.inputUsername.text()
         email = self.inputEmailID.text()
         password = self.inputPassword.text()
-        self.showMessageboxOk('Warning', 'New user added successfully')
-        connection = sqlite3.connect("login.db")
-        connection.execute("INSERT INTO USERS VALUES(?,?,?)", (username, email, password))
-        connection.commit()
-        connection.close()
-        self.inputUsername.setText("")
-        self.inputEmailID.setText("")
-        #password = self.inputPassword.setText("")
-        self.inputPassword.setText("")
-        print("$$$$$$$")
-        self.signUpWindow.hide()
-        #login.hideSignUp()
-        print("@@@@@")
+
+        is_valid = validate_email(email)
+
+        if(is_valid):
+            print("OK")
+            connection = sqlite3.connect("login.db")
+            connection.execute("INSERT INTO USERS VALUES(?,?,?)", (username, email, password))
+            connection.commit()
+            connection.close()
+            self.inputUsername.setText("")
+            self.inputEmailID.setText("")
+            self.inputPassword.setText("")
+            self.showMessageboxOk('Information', 'New user added successfully')
+            self.signUpWindow.hide()
+        else:
+            print("Not valid")
+            self.showMessageboxOk('Information', 'Invalid email address')
+            self.inputEmailID.setText("")
+            self.inputPassword.setText("")
 
 
     def setupUi(self, signUpWindow):

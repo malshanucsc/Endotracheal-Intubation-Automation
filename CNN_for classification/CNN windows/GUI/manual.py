@@ -440,6 +440,7 @@ class Ui_manualWindow(object):
         self.btnFileSelect.setObjectName("btnFileSelect")
         self.btnCancelUploading = QtWidgets.QPushButton(self.centralwidget)
         self.btnCancelUploading.setGeometry(QtCore.QRect(559, 130, 102, 21))
+        self.btnCancelUploading.clicked.connect(self.cancelUpload)
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(0, 105, 92))
         brush.setStyle(QtCore.Qt.SolidPattern)
@@ -607,7 +608,7 @@ class Ui_manualWindow(object):
         self.btnSaveSnapshot.setText(_translate("manualWindow", "Save Snapshot"))
         self.label_2.setText(_translate("manualWindow", "CHOOSE THE VIDEO FILE TO START THE PROCESS"))
         self.btnStartProcess.setText(_translate("manualWindow", "Start the Process"))
-        self.lblVideoName.setText(_translate("manualWindow", "SampleVideo.mp4"))
+        self.lblVideoName.setText(_translate("manualWindow", ""))
         self.btnFileSelect.setText(_translate("manualWindow", "Choose to Upload"))
         self.btnCancelUploading.setText(_translate("manualWindow", "Cancel"))
         self.lblLandmark.setText(_translate("manualWindow", "Anatomical Location :"))
@@ -632,6 +633,7 @@ class Ui_manualWindow(object):
         print("File is being uploaded...")
         options = QtWidgets.QFileDialog.Options()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
+        #self.fileName, _ = QtWidgets.QFileDialog.getOpenFileName(None, "QFileDialog.getOpenFileName()", "", "All Files (*);;Python Files (*.py)", options=options)
         self.fileName, _ = QtWidgets.QFileDialog.getOpenFileName(None, "QFileDialog.getOpenFileName()", "", "All Files (*);;Python Files (*.py)", options=options)
         videoName = ntpath.basename(self.fileName)
         self.lblVideoName.setText(videoName)
@@ -642,18 +644,11 @@ class Ui_manualWindow(object):
         save_img = cv2.cvtColor(self.display_img, cv2.COLOR_BGR2RGB)
         cv2.imwrite(save_name,save_img)
 
-
-
-
-
         r = 150.0 / self.display_img.shape[1]
         dim = (150, int(self.display_img.shape[0] * r))
 
         # perform the actual resizing of the image and show it
         resized_save_image = cv2.resize(self.display_img, dim, interpolation=cv2.INTER_AREA)
-
-
-        #resized_save_image=cv2.resize(self.display_img,(175,100))
 
         save_height, save_width, save_channel = resized_save_image.shape
         bytesPerLine = 3 * save_width
@@ -664,8 +659,6 @@ class Ui_manualWindow(object):
         #print(self.scene)
         self.viewSavedSnaps.setScene(self.scene)
         self.saveImageProgrezz()
-
-
 
     def startIntubation(self):
         print("Process is being started...")
@@ -678,46 +671,37 @@ class Ui_manualWindow(object):
         thread = Thread(target=self.threaded_function, args=())
 
         if self.UICount == 1:
-
             thread.start()
-
-
-
 
     def runvideo(self):
         self.run = label2.prediction()
         self.UICount = 1
-
-        # print(self.run.video_file)
-
         self.run.main2()
 
-
     def threaded_function(self):
-
         while (True):
             if self.thread_exit:
                 return
 
-            if(isinstance(str(self.run.output_location),str)):
+            """if(isinstance(str(self.run.output_location),str)):
                 self.lblTubePosition.setText(str(self.run.output_location))
             if(isinstance(self.run.navigation_message,str)):
-                self.lblNavigation.setText(self.run.navigation_message)
+                self.lblNavigation.setText(self.run.navigation_message)"""
 
+            if(not(self.run.queue is None)):
+                if (self.run.queue.isEmpty() == False):
+                    list_obj=self.run.queue.dequeue()
 
-            if (self.run.queue.isEmpty() == False):
+                    self.lblTubePosition.setText(str(list_obj[0]))
+                    self.lblNavigation.setText(list_obj[1])
 
-                self.display_img = cv2.cvtColor(self.run.queue.dequeue(), cv2.COLOR_RGB2BGR)
-                # cv2.imshow("kjkj",img)
-                height, width, channel = self.display_img.shape
-                bytesPerLine = 3 * width
-                qImg = QtGui.QImage(self.display_img.data, width, height, bytesPerLine, QImage.Format_RGB888)
-
-                pixmap = QPixmap(qImg)
-
-                # pixmap = QPixmap('C:\\Users\\Sandunika\\Downloads\\img\\{n}.jpg'.format(n=str((i % 5) + 1)))
-                self.lblLoadImage.setPixmap(pixmap)
-                time.sleep(0.1)
+                    self.display_img = cv2.cvtColor(list_obj[2], cv2.COLOR_RGB2BGR)
+                    height, width, channel = self.display_img.shape
+                    bytesPerLine = 3 * width
+                    qImg = QtGui.QImage(self.display_img.data, width, height, bytesPerLine, QImage.Format_RGB888)
+                    pixmap = QPixmap(qImg)
+                    self.lblLoadImage.setPixmap(pixmap)
+                    time.sleep(0.1)
 
     def endProcess(self):
         self.manualWindow.hide()
@@ -726,7 +710,9 @@ class Ui_manualWindow(object):
         self.ui.setupUi(self.newMode_window)
         self.newMode_window.show()
 
-
+    def cancelUpload(self):
+        self.progressBarFileUpload.setProperty("value", 0)
+        self.lblVideoName.setText("")
 
 if __name__ == "__main__":
     import sys
