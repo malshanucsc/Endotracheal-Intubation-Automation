@@ -8,6 +8,7 @@
 
 import ntpath
 import time
+import os
 from threading import Thread
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QPixmap,QImage
@@ -592,6 +593,41 @@ class Ui_manualWindow(object):
         self.lblNavigation.setFont(font)
         self.lblNavigation.setText("")
         self.lblNavigation.setObjectName("lblNavigation")
+        self.btnOpenFolder = QtWidgets.QPushButton(self.centralwidget)
+        self.btnOpenFolder.setEnabled(True)
+        self.btnOpenFolder.setGeometry(QtCore.QRect(670, 680, 161, 31))
+        font = QtGui.QFont()
+        font.setFamily("Open Sans")
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setWeight(75)
+        self.btnOpenFolder.setFont(font)
+        self.btnOpenFolder.setStyleSheet("QPushButton\n"
+                                         "{\n"
+                                         "    color: #fff;\n"
+                                         "    background-color: #00796B;\n"
+                                         "    border-width:1px;\n"
+                                         "    border-color: #00695C;\n"
+                                         "    border-style: solid;\n"
+                                         "    border-radius: 8px;\n"
+                                         "    padding: 2px;\n"
+                                         "    padding-left: 5px;\n"
+                                         "    padding-right: 5px;\n"
+                                         "}\n"
+                                         "\n"
+                                         "\n"
+                                         "\n"
+                                         "QPushButton:hover\n"
+                                         "{\n"
+                                         "    background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #018175, stop: 0.1 #018175, stop: 0.5 #018175, stop: 0.9 #018175, stop: 1 #018175);\n"
+                                         "}\n"
+                                         "\n"
+                                         "QPushButton:pressed\n"
+                                         "{\n"
+                                         "   background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #02695F, stop: 0.1 #02695F, stop: 0.5 #02695F, stop: 0.9 #02695F, stop: 1 #02695F);\n"
+                                         "}")
+        self.btnOpenFolder.setObjectName("btnOpenFolder")
+        self.btnOpenFolder.clicked.connect(self.openSanpsFolder)
         manualWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(manualWindow)
         self.statusbar.setObjectName("statusbar")
@@ -615,6 +651,7 @@ class Ui_manualWindow(object):
         self.label_7.setText(_translate("manualWindow", "Genarating the images"))
         self.label_8.setText(_translate("manualWindow", "All Right Reserved"))
         self.lblNavigationTopic.setText(_translate("manualWindow", "Navigation :"))
+        self.btnOpenFolder.setText(_translate("manualWindow", "Open Folder"))
 
     def progrezz(self):
         self.completed = 0
@@ -713,6 +750,11 @@ class Ui_manualWindow(object):
     def cancelUpload(self):
         self.progressBarFileUpload.setProperty("value", 0)
         self.lblVideoName.setText("")
+
+    def openSanpsFolder(self):
+        path = "D:/Academic/4th Year/1st Semester/Project SCS- 4123/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/Snapshot"
+        path = os.path.realpath(path)
+        os.startfile(path)
 
 if __name__ == "__main__":
     import sys
