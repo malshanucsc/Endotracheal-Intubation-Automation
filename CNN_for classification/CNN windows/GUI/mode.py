@@ -21,12 +21,14 @@ class Ui_selectWindow(object):
             self.ui = Ui_manualWindow()
             self.ui.setupUi(self.window)
             self.window.show()
+            self.selectWindow.hide()
         elif self.radioBtnAuto.isChecked() == True:
             print("Auto is checked")
             self.window = QtWidgets.QMainWindow()
             self.ui = Ui_autoWindow()
             self.ui.setupUi(self.window)
             self.window.show()
+            self.selectWindow.hide()
         else:
             self.showMessagebox('Warning', 'Select the Intubation Mode')
 
@@ -40,6 +42,7 @@ class Ui_selectWindow(object):
         messageBox.exec()
 
     def setupUi(self, selectWindow):
+        self.selectWindow = selectWindow
         selectWindow.setObjectName("selectWindow")
         selectWindow.resize(698, 588)
         self.centralwidget = QtWidgets.QWidget(selectWindow)

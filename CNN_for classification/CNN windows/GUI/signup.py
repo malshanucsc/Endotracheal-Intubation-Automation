@@ -7,25 +7,50 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QMessageBox
+import login
 import sqlite3
 
 class Ui_signUpWindow(object):
+
+    def showMessageboxYesNo(self, title, message):
+        messageBox = QtWidgets.QMessageBox()
+        messageBox.setIcon(QMessageBox.Warning)
+        messageBox.setWindowTitle("Warning")
+        messageBox.setText(message)
+        messageBox.setStandardButtons(QMessageBox.Yes, QMessageBox.No)
+        messageBox.exec()
+
+    def showMessageboxOk(self, title, message):
+        print("Invalid User")
+        messageBox = QtWidgets.QMessageBox()
+        messageBox.setIcon(QMessageBox.Warning)
+        messageBox.setWindowTitle("Warning")
+        messageBox.setText(message)
+        messageBox.setStandardButtons(QMessageBox.Ok)
+        messageBox.exec()
 
     def insertData(self):
         username = self.inputUsername.text()
         email = self.inputEmailID.text()
         password = self.inputPassword.text()
-
+        self.showMessageboxOk('Warning', 'New user added successfully')
         connection = sqlite3.connect("login.db")
         connection.execute("INSERT INTO USERS VALUES(?,?,?)", (username, email, password))
         connection.commit()
         connection.close()
         self.inputUsername.setText("")
         self.inputEmailID.setText("")
-        password = self.inputPassword.setText("")
+        #password = self.inputPassword.setText("")
+        self.inputPassword.setText("")
+        print("$$$$$$$")
+        self.signUpWindow.hide()
+        #login.hideSignUp()
+        print("@@@@@")
 
 
     def setupUi(self, signUpWindow):
+        self.signUpWindow=signUpWindow
         signUpWindow.setObjectName("signUpWindow")
         signUpWindow.resize(700, 591)
         self.centralwidget = QtWidgets.QWidget(signUpWindow)
@@ -189,6 +214,7 @@ class Ui_signUpWindow(object):
         self.btnCancel = QtWidgets.QPushButton(self.centralwidget)
         self.btnCancel.setEnabled(True)
         self.btnCancel.setGeometry(QtCore.QRect(400, 400, 91, 31))
+        self.btnCancel.clicked.connect(self.closeWindow)
         font = QtGui.QFont()
         font.setFamily("Open Sans")
         font.setPointSize(10)
@@ -285,6 +311,13 @@ class Ui_signUpWindow(object):
         self.label.setText(_translate("signUpWindow", "Username"))
         self.btnCancel.setText(_translate("signUpWindow", "Cancel"))
         self.label_5.setText(_translate("signUpWindow", "Email ID"))
+
+    def closeWindow(self):
+        print("Window is closed")
+        #self.showMessageboxYesNo('Warning', 'Are you sure you want to cancel adding a new user?')
+        self.signUpWindow.hide()
+
+
 
 
 if __name__ == "__main__":

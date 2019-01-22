@@ -8,14 +8,14 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox
-from mode import Ui_selectWindow
-from signup import Ui_signUpWindow
+import mode
+import signup
 import sqlite3
 
 class Ui_loginWindow(object):
 
-    def showMessagebox(self, title, message):
-        print("Invalid User")
+
+    def showMessageboxOk(self, title, message):
         messageBox = QtWidgets.QMessageBox()
         messageBox.setIcon(QMessageBox.Warning)
         messageBox.setWindowTitle("Warning")
@@ -29,30 +29,42 @@ class Ui_loginWindow(object):
         password = self.inputPassword.text()
 
         connection = sqlite3.connect("login.db")
-        result = connection.execute("SELECT * FROM USERS WHERE USERNAME = ? AND PASSWORD = ?", (username, password))
+        result = connection.execute("SELECT USERNAME FROM USERS WHERE USERNAME =?", (username,))
+
         if (len(result.fetchall()) > 0):
-            print("User Found !")
-            loginWindow.hide()
-            self.mode_window = QtWidgets.QMainWindow()
-            self.ui = Ui_selectWindow()
-            self.ui.setupUi(self.mode_window)
-            self.mode_window.show()
+            for resultPassword in connection.execute("SELECT PASSWORD FROM USERS WHERE USERNAME =?", (username,)):
+                if(resultPassword[0] == password):
+                    print("User Found !")
+                    loginWindow.hide()
+                    self.mode_window = QtWidgets.QMainWindow()
+                    self.ui = mode.Ui_selectWindow()
+                    self.ui.setupUi(self.mode_window)
+                    self.mode_window.show()
+                else:
+                    self.showMessageboxOk('Warning', 'Credentials are incorrect')
+                    self.inputPassword.setText("")
         else:
-            print("User Not Found!")
-            self.showMessagebox('Warning', 'Credentials are Incorrect')
+            print("Incorrect")
+            self.showMessageboxOk('Warning', 'User not found. Please Sign Up')
             self.inputUsername.setText("")
             self.inputPassword.setText("")
 
     def signUpCheck(self):
         print("Sign Up Button Clicked! ")
         self.signup_window = QtWidgets.QMainWindow()
-        self.ui = Ui_signUpWindow()
+        self.ui = signup.Ui_signUpWindow()
         self.ui.setupUi(self.signup_window)
         self.signup_window.show()
+
+
+    def hideSignUp(self):
+        self.signup_window.hide()
 
     def setupUi(self, loginWindow):
         loginWindow.setObjectName("loginWindow")
         loginWindow.resize(700, 591)
+        loginWindow.setMinimumSize(QtCore.QSize(700, 591))
+        loginWindow .setMaximumSize(QtCore.QSize(700, 591))
         self.centralwidget = QtWidgets.QWidget(loginWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.btnLogin = QtWidgets.QPushButton(self.centralwidget)
@@ -285,6 +297,7 @@ class Ui_loginWindow(object):
 
 
 if __name__ == "__main__":
+    print("hgg")
     import sys
     app = QtWidgets.QApplication(sys.argv)
     loginWindow = QtWidgets.QMainWindow()
