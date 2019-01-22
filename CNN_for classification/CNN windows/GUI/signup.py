@@ -53,6 +53,8 @@ class Ui_signUpWindow(object):
         self.signUpWindow=signUpWindow
         signUpWindow.setObjectName("signUpWindow")
         signUpWindow.resize(700, 591)
+        signUpWindow.setMinimumSize(QtCore.QSize(700, 591))
+        signUpWindow.setMaximumSize(QtCore.QSize(700, 591))
         self.centralwidget = QtWidgets.QWidget(signUpWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.btnOk = QtWidgets.QPushButton(self.centralwidget)

@@ -12,6 +12,8 @@ class Ui_autoWindow(object):
     def setupUi(self, autoWindow):
         autoWindow.setObjectName("autoWindow")
         autoWindow.resize(701, 611)
+        autoWindow.setMinimumSize(QtCore.QSize(701, 611))
+        autoWindow.setMaximumSize(QtCore.QSize(701, 611))
         self.centralwidget = QtWidgets.QWidget(autoWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.label_4 = QtWidgets.QLabel(self.centralwidget)

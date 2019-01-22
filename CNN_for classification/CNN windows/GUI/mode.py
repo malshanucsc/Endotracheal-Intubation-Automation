@@ -45,6 +45,8 @@ class Ui_selectWindow(object):
         self.selectWindow = selectWindow
         selectWindow.setObjectName("selectWindow")
         selectWindow.resize(698, 588)
+        selectWindow.setMinimumSize(QtCore.QSize(698, 588))
+        selectWindow.setMaximumSize(QtCore.QSize(698, 588))
         self.centralwidget = QtWidgets.QWidget(selectWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.label_3 = QtWidgets.QLabel(self.centralwidget)

@@ -9,23 +9,16 @@
 import ntpath
 import time
 from threading import Thread
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QPixmap,QImage
-
 import cv2
-
 import sys
-
+import mode
 from PyQt5.QtWidgets import QGraphicsScene, QGraphicsPixmapItem
 
 sys.path.insert(0, '../')
 
 import label2
-
-
-
-
 
 class Ui_manualWindow(object):
     def __init__(self):
@@ -35,8 +28,11 @@ class Ui_manualWindow(object):
         self.imagelist=[]
 
     def setupUi(self, manualWindow):
+        self.manualWindow = manualWindow
         manualWindow.setObjectName("manualWindow")
         manualWindow.resize(844, 863)
+        manualWindow.setMinimumSize(QtCore.QSize(844, 863))
+        manualWindow.setMaximumSize(QtCore.QSize(844, 863))
         manualWindow.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.centralwidget = QtWidgets.QWidget(manualWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -55,6 +51,7 @@ class Ui_manualWindow(object):
         self.viewTubeLocation.setObjectName("viewTubeLocation")
         self.btnEndProcess = QtWidgets.QPushButton(self.centralwidget)
         self.btnEndProcess.setGeometry(QtCore.QRect(670, 770, 151, 21))
+        self.btnEndProcess.clicked.connect(self.endProcess)
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(0, 105, 92))
         brush.setStyle(QtCore.Qt.SolidPattern)
@@ -129,6 +126,7 @@ class Ui_manualWindow(object):
 "}")
         self.btnEndProcess.setAutoDefault(True)
         self.btnEndProcess.setObjectName("btnEndProcess")
+
         self.viewSavedSnaps = QtWidgets.QGraphicsView(self.centralwidget)
         self.viewSavedSnaps.setGeometry(QtCore.QRect(670, 320, 151, 351))
         self.viewSavedSnaps.setStyleSheet("QGraphicsView\n"
@@ -720,6 +718,14 @@ class Ui_manualWindow(object):
                 # pixmap = QPixmap('C:\\Users\\Sandunika\\Downloads\\img\\{n}.jpg'.format(n=str((i % 5) + 1)))
                 self.lblLoadImage.setPixmap(pixmap)
                 time.sleep(0.1)
+
+    def endProcess(self):
+        self.manualWindow.hide()
+        self.newMode_window = QtWidgets.QMainWindow()
+        self.ui = mode.Ui_selectWindow()
+        self.ui.setupUi(self.newMode_window)
+        self.newMode_window.show()
+
 
 
 if __name__ == "__main__":
