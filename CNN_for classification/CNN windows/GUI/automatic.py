@@ -283,7 +283,7 @@ class Ui_autoWindow(object):
 "     background-color: #4DB6AC;\n"
 "     width: 24%;\n"
 " }")
-        self.progressBarAuto.setProperty("value", 24)
+        self.progressBarAuto.setProperty("value", 0)
         self.progressBarAuto.setObjectName("progressBarAuto")
         self.btnEndProcess = QtWidgets.QPushButton(self.centralwidget)
         self.btnEndProcess.setGeometry(QtCore.QRect(531, 520, 131, 21))
@@ -422,7 +422,7 @@ class Ui_autoWindow(object):
 "     background-color: #4DB6AC;\n"
 "     width: 24%;\n"
 " }")
-        self.progressBarSnaps.setProperty("value", 24)
+        self.progressBarSnaps.setProperty("value", 0)
         self.progressBarSnaps.setObjectName("progressBarSnaps")
         self.graphicsViewSavedSnaps = QtWidgets.QGraphicsView(self.centralwidget)
         self.graphicsViewSavedSnaps.setGeometry(QtCore.QRect(530, 310, 131, 201))

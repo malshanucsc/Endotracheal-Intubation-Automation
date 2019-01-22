@@ -64,11 +64,7 @@ class prediction:
 
         return graph
 
-    #def read_tensor_from_image_file(self, img, input_height=299, input_width=299, input_mean=0, input_std=255):
 
-        # print(resized)
-
-        #return result
 
     def load_labels(self, label_file):
         label = []
@@ -111,9 +107,6 @@ class prediction:
             else:
                 return 9
 
-    #def output_frame_details(self):
-        # print(input_height)
-
 
 
     def visualize_func(self, predicting_location ):
@@ -144,19 +137,16 @@ class prediction:
         elif(direction_output==9):
             self.navigation_message="Move backward"
 
-        #print(file_name)
-        #self.count+=1
+
 
         for filename in glob.glob("../surf_images/location" + str(file_name) + "/*.jpg"):
 
 
             match_img = cv2.imread(filename, 0)
-            # cv2.imshow("matching image",match_img)
+
             kp1, des1 = self.surf.detectAndCompute(match_img, None)
 
-            # outkeypointimages=cv2.drawKeypoints(match_img, kp1, np.array([]), (0,0,255));
-            # cv2.imshow("asas",outkeypointimages)
-            # cv2.imwrite("surf_images/keypoints/"+str(random.randint(1,100000))+".jpg",outkeypointimages)
+
 
             temp_out_img = cv2.cvtColor(self.img2, cv2.COLOR_BGR2GRAY)
 
@@ -167,9 +157,7 @@ class prediction:
             index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
             search_params = dict(checks=50)
 
-            # bf = cv2.BFMatcher(cv2.NORM_L1, crossCheck=False)
 
-            # matches = bf.match(des1, des2)
 
             flann = cv2.FlannBasedMatcher(index_params, search_params)
 
@@ -205,14 +193,7 @@ class prediction:
 
                 if isinstance(M, np.ndarray):
                     self.dst = cv2.perspectiveTransform(pts, M)
-                    # img2 = cv2.polylines(self.img2,[np.int32(dst)],True,255,3, cv2.LINE_AA)
-                    # cv2.imwrite("surf_images/polylines/"+str(random.randint(1,100000))+".jpg",img2)
-                    # print(dst)
-                    # h2,w2,g=self.img2.shape
-                    # print(h2)
-                    # print(w2)
-                    # print(g)
-                    #print(self.dst)
+
                     self.xx = (self.dst[0][0][0] + self.dst[1][0][0] + self.dst[2][0][0] + self.dst[3][0][0]) / 4
                     self.yy = (self.dst[0][0][1] + self.dst[1][0][1] + self.dst[2][0][1] + self.dst[3][0][1]) / 4
                     if(self.xx > 0 and self.yy > 0):
@@ -249,25 +230,7 @@ class prediction:
 
 
             cv2.circle(self.img2, (np.int32(self.x), np.int32(self.y)), 10, (0, 0, 255), -1)
-            #print(np.int32(self.x))
 
-                # cv2.line(self.img2, (dst[0][0][0],dst[0][0][1]), (dst[1][0][0],dst[1][0][1]), (0, 255, 0), 4);
-                # cv2.line(self.img2, (dst[1][0][0],dst[1][0][1]), (dst[2][0][0], dst[2][0][1]), (0, 255, 0), 4);
-                # cv2.line(self.img2, (dst[2][0][0], dst[2][0][1]), (dst[3][0][0], dst[3][0][1]), (0, 255, 0), 4);
-                # cv2.line(self.img2, (dst[3][0][0], dst[3][0][1]), (dst[0][0][0], dst[0][0][1]), (0, 255, 0), 4);
-
-                # line(image, scene_corners[1], scene_corners[2], Scalar(0, 255, 0), 4);
-
-                # line(image, scene_corners[2], scene_corners[3], Scalar(0, 255, 0), 4);
-
-                # line(image, scene_corners[3], scene_corners[0], Scalar(0, 255, 0), 4);
-
-                # self.img2 = cv2.polylines(self.img2, [np.int32(dst)], True, 255, 3, cv2.LINE_AA)
-                # h2, w2,g = self.img2.shape
-                # print(h2)
-                # print(w2)
-                # print(g)
-        #print(str(self.count) + "   " + str(self.first_pointer))
 
 
         new_direction = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/directions/new/" + str(
@@ -293,19 +256,6 @@ class prediction:
         self.count += 1
 
 
-        #UI part
-
-
-
-        #self.update()
-        #self.window.update()
-
-
-
-
-
-
-        ##ui part end
 
         #h,w,g=self.vis.shape
         #print(h)
@@ -325,10 +275,7 @@ class prediction:
         # time.sleep(0.001)
 
     def readframe_func(self):
-        #r_placeholder = tf.placeholder(tf.float32, shape=[])
-        #out_t = tf.trace(tf.random_normal((4, 4), r_placeholder, 1.0))
-        #if(running==False):
-        #return
+
 
         with tf.Session(graph=self.graph) as self.sess:
 
@@ -351,13 +298,11 @@ class prediction:
                 input_std = 255
 
                 im = Image.fromarray(self.img)
-                # im= im.convert('LA')
 
                 im.resize((input_height, input_width), Image.ANTIALIAS)
 
                 image_array = np.array(im)[:, :, 0:3]  # Select RGB channels only.
-                # cv2.resize(img,(input_width,input_height))
-                # np.array(im)[:, :, 0:3]  # Select RGB channels only.
+
 
                 float_caster = tf.cast(image_array, tf.float32)
                 #print(sys.getsizeof(float_caster))
@@ -367,25 +312,6 @@ class prediction:
                 #print(normalized)
                 #sess = tf.Session()
                 t = self.sess.run(normalized)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
                 input_name = "import/" + self.input_layer
@@ -446,15 +372,6 @@ class prediction:
                 # print(" ")
                 self.visualize_func(predicting_location);
 
-            # print(" new frame")
-
-        #  cv2.waitKey(1)
-
-        # count += 1
-
-        # print(datetime.datetime.time(datetime.datetime.now()))
-
-        # file_name = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/frame1008.jpg"
 
     def main2(self):
         print("start main in prediction")
@@ -483,13 +400,6 @@ class prediction:
         #"E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/5.mp4"
 
 
-
-
-
-
-
-
-
         # self.cap = cv2.VideoCapture("E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sample_video.mp4")
         #print(self.video_file)
         self.cap = cv2.VideoCapture(self.video_file)
@@ -499,32 +409,6 @@ class prediction:
         self.img2 = self.img;
         self.location_image = self.img2
 
-        ##UI part
-
-        # initialize the root window and image panel
-
-        self.window = tkinter.Tk()
-        self.window.title("Tkinter and OpenCV")
-        self.video_source = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/8.mp4"
-
-        # open video source (by default this will try to open the computer webcam)
-        #self.vid = MyVideoCapture(self.video_source)
-        # Create a canvas that can fit the above video source size
-        self.canvas = tkinter.Canvas(self.window, width=426, height=546)
-        self.canvas.pack()
-        # Button that lets the user take a snapshot
-        #self.btn_snapshot = tkinter.Button(window, text="Snapshot", width=50, command=self.snapshot)
-        #self.btn_snapshot.pack(anchor=tkinter.CENTER, expand=True)
-
-        # After it is called once, the update method will be automatically called every delay milliseconds
-        #self.delay = 15
-        #self.update()
-        #self.window.mainloop()
-
-        ##
-
-
-        # /media/cola/EDU/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows
 
         # self.read_frame_thread = threading.Thread(name="read_frame", target= self.readframe_func)
         # self.read_frame_thread.setDaemon(True)

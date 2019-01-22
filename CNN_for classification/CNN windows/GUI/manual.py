@@ -53,7 +53,7 @@ class Ui_manualWindow(object):
 "")
         self.viewTubeLocation.setObjectName("viewTubeLocation")
         self.btnEndProcess = QtWidgets.QPushButton(self.centralwidget)
-        self.btnEndProcess.setGeometry(QtCore.QRect(100, 100, 151, 21))
+        self.btnEndProcess.setGeometry(QtCore.QRect(670, 770, 151, 21))
         self.btnEndProcess.clicked.connect(self.endProcess)
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(0, 105, 92))
