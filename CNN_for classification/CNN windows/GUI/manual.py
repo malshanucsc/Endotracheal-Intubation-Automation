@@ -701,25 +701,32 @@ class Ui_manualWindow(object):
             if self.thread_exit:
                 return
 
-            if(isinstance(str(self.run.output_location),str)):
+            """if(isinstance(str(self.run.output_location),str)):
                 self.lblTubePosition.setText(str(self.run.output_location))
             if(isinstance(self.run.navigation_message,str)):
-                self.lblNavigation.setText(self.run.navigation_message)
+                self.lblNavigation.setText(self.run.navigation_message)"""
+
+            if(not(self.run.queue is None)):
 
 
-            if (self.run.queue.isEmpty() == False):
+                if (self.run.queue.isEmpty() == False):
+                    list_obj=self.run.queue.dequeue()
 
-                self.display_img = cv2.cvtColor(self.run.queue.dequeue(), cv2.COLOR_RGB2BGR)
-                # cv2.imshow("kjkj",img)
-                height, width, channel = self.display_img.shape
-                bytesPerLine = 3 * width
-                qImg = QtGui.QImage(self.display_img.data, width, height, bytesPerLine, QImage.Format_RGB888)
+                    self.lblTubePosition.setText(str(list_obj[0]))
+                    self.lblNavigation.setText(list_obj[1])
 
-                pixmap = QPixmap(qImg)
 
-                # pixmap = QPixmap('C:\\Users\\Sandunika\\Downloads\\img\\{n}.jpg'.format(n=str((i % 5) + 1)))
-                self.lblLoadImage.setPixmap(pixmap)
-                time.sleep(0.1)
+                    self.display_img = cv2.cvtColor(list_obj[2], cv2.COLOR_RGB2BGR)
+                    # cv2.imshow("kjkj",img)
+                    height, width, channel = self.display_img.shape
+                    bytesPerLine = 3 * width
+                    qImg = QtGui.QImage(self.display_img.data, width, height, bytesPerLine, QImage.Format_RGB888)
+
+                    pixmap = QPixmap(qImg)
+
+                    # pixmap = QPixmap('C:\\Users\\Sandunika\\Downloads\\img\\{n}.jpg'.format(n=str((i % 5) + 1)))
+                    self.lblLoadImage.setPixmap(pixmap)
+                    time.sleep(0.1)
 
 
 if __name__ == "__main__":
