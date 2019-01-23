@@ -5,9 +5,11 @@
 # Created by: PyQt5 UI code generator 5.11.2
 #
 # WARNING! All changes made in this file will be lost!
+
 from threading import Thread
 import time
 import cv2
+import os
 import sys
 from PyQt5.QtGui import QPixmap,QImage
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -17,7 +19,6 @@ import mode
 sys.path.insert(0, '../')
 import label2
 
-
 class Ui_autoWindow(object):
     def __init__(self):
         self.thread_exit = False
@@ -26,12 +27,11 @@ class Ui_autoWindow(object):
         self.imagelist=[]
         self.started = False
 
+
     def setupUi(self, autoWindow):
-        self.autoWindow=autoWindow
+        self.autoWindow = autoWindow
         autoWindow.setObjectName("autoWindow")
-        autoWindow.resize(701, 611)
-        autoWindow.setMinimumSize(QtCore.QSize(701, 611))
-        autoWindow.setMaximumSize(QtCore.QSize(701, 611))
+        autoWindow.resize(730, 863)
         self.centralwidget = QtWidgets.QWidget(autoWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.label_4 = QtWidgets.QLabel(self.centralwidget)
@@ -44,51 +44,8 @@ class Ui_autoWindow(object):
         font.setWeight(75)
         self.label_4.setFont(font)
         self.label_4.setObjectName("label_4")
-        self.btnPause = QtWidgets.QPushButton(self.centralwidget)
-        self.btnPause.setEnabled(True)
-        self.btnPause.setGeometry(QtCore.QRect(290, 520, 71, 21))
-        font = QtGui.QFont()
-        font.setFamily("Open Sans")
-        font.setPointSize(10)
-        font.setBold(True)
-        font.setWeight(75)
-        self.btnPause.setFont(font)
-        self.btnPause.setStyleSheet("QPushButton\n"
-"{\n"
-"    color: #fff;\n"
-"    background-color: #00796B;\n"
-"    border-width:1px;\n"
-"    border-color: #00695C;\n"
-"    border-style: solid;\n"
-"    border-radius: 8px;\n"
-"    padding: 2px;\n"
-"    padding-left: 5px;\n"
-"    padding-right: 5px;\n"
-"}\n"
-"\n"
-"\n"
-"\n"
-"QPushButton:hover\n"
-"{\n"
-"    background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #018175, stop: 0.1 #018175, stop: 0.5 #018175, stop: 0.9 #018175, stop: 1 #018175);\n"
-"}\n"
-"\n"
-"QPushButton:pressed\n"
-"{\n"
-"   background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #02695F, stop: 0.1 #02695F, stop: 0.5 #02695F, stop: 0.9 #02695F, stop: 1 #02695F);\n"
-"}")
-        self.btnPause.setObjectName("btnPause")
-        self.label_5 = QtWidgets.QLabel(self.centralwidget)
-        self.label_5.setGeometry(QtCore.QRect(40, 210, 141, 31))
-        font = QtGui.QFont()
-        font.setFamily("Open Sans")
-        font.setPointSize(10)
-        font.setBold(False)
-        font.setWeight(50)
-        self.label_5.setFont(font)
-        self.label_5.setObjectName("label_5")
         self.viewTubeLocation = QtWidgets.QGraphicsView(self.centralwidget)
-        self.viewTubeLocation.setGeometry(QtCore.QRect(40, 240, 420, 271))
+        self.viewTubeLocation.setGeometry(QtCore.QRect(40, 300, 428, 484))
         self.viewTubeLocation.setStyleSheet("QGraphicsView\n"
 "{\n"
 "    color: #fff;\n"
@@ -101,7 +58,7 @@ class Ui_autoWindow(object):
 "")
         self.viewTubeLocation.setObjectName("viewTubeLocation")
         self.btnCancel = QtWidgets.QPushButton(self.centralwidget)
-        self.btnCancel.setGeometry(QtCore.QRect(560, 150, 102, 21))
+        self.btnCancel.setGeometry(QtCore.QRect(560, 160, 102, 21))
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(0, 105, 92))
         brush.setStyle(QtCore.Qt.SolidPattern)
@@ -175,7 +132,7 @@ class Ui_autoWindow(object):
 "}")
         self.btnCancel.setObjectName("btnCancel")
         self.label_7 = QtWidgets.QLabel(self.centralwidget)
-        self.label_7.setGeometry(QtCore.QRect(530, 250, 141, 31))
+        self.label_7.setGeometry(QtCore.QRect(550, 260, 141, 31))
         font = QtGui.QFont()
         font.setFamily("Open Sans")
         font.setPointSize(9)
@@ -184,17 +141,17 @@ class Ui_autoWindow(object):
         self.label_7.setFont(font)
         self.label_7.setObjectName("label_7")
         self.line_3 = QtWidgets.QFrame(self.centralwidget)
-        self.line_3.setGeometry(QtCore.QRect(0, 550, 701, 41))
+        self.line_3.setGeometry(QtCore.QRect(0, 800, 841, 41))
         self.line_3.setFrameShape(QtWidgets.QFrame.HLine)
         self.line_3.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_3.setObjectName("line_3")
         self.line_2 = QtWidgets.QFrame(self.centralwidget)
-        self.line_2.setGeometry(QtCore.QRect(0, 190, 701, 21))
+        self.line_2.setGeometry(QtCore.QRect(0, 190, 771, 21))
         self.line_2.setFrameShape(QtWidgets.QFrame.HLine)
         self.line_2.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_2.setObjectName("line_2")
         self.label_8 = QtWidgets.QLabel(self.centralwidget)
-        self.label_8.setGeometry(QtCore.QRect(0, 570, 701, 21))
+        self.label_8.setGeometry(QtCore.QRect(0, 820, 841, 21))
         font = QtGui.QFont()
         font.setFamily("Open Sans")
         font.setPointSize(8)
@@ -208,15 +165,7 @@ class Ui_autoWindow(object):
         self.label_8.setAlignment(QtCore.Qt.AlignCenter)
         self.label_8.setObjectName("label_8")
         self.label_3 = QtWidgets.QLabel(self.centralwidget)
-        self.label_3.setGeometry(QtCore.QRect(0, 0, 701, 51))
-
-        self.lblLoadImage = QtWidgets.QLabel(self.centralwidget)
-        self.lblLoadImage.setGeometry(QtCore.QRect(40, 240, 451, 271))
-        self.lblLoadImage.setFrameShape(QtWidgets.QFrame.NoFrame)
-        self.lblLoadImage.setText("")
-        self.lblLoadImage.setObjectName("lblLoadImage")
-
-
+        self.label_3.setGeometry(QtCore.QRect(0, 0, 851, 51))
         font = QtGui.QFont()
         font.setFamily("Open Sans")
         font.setPointSize(14)
@@ -231,8 +180,9 @@ class Ui_autoWindow(object):
         self.label_3.setObjectName("label_3")
         self.btnStartProcess = QtWidgets.QPushButton(self.centralwidget)
         self.btnStartProcess.setEnabled(True)
-        self.btnStartProcess.setGeometry(QtCore.QRect(530, 220, 131, 31))
+        self.btnStartProcess.setGeometry(QtCore.QRect(550, 220, 161, 31))
         self.btnStartProcess.clicked.connect(self.startIntubation)
+
         font = QtGui.QFont()
         font.setFamily("Open Sans")
         font.setPointSize(10)
@@ -265,7 +215,7 @@ class Ui_autoWindow(object):
 "}")
         self.btnStartProcess.setObjectName("btnStartProcess")
         self.progressBarAuto = QtWidgets.QProgressBar(self.centralwidget)
-        self.progressBarAuto.setGeometry(QtCore.QRect(40, 150, 341, 20))
+        self.progressBarAuto.setGeometry(QtCore.QRect(40, 160, 341, 20))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.progressBarAuto.setFont(font)
@@ -286,7 +236,7 @@ class Ui_autoWindow(object):
         self.progressBarAuto.setProperty("value", 0)
         self.progressBarAuto.setObjectName("progressBarAuto")
         self.btnEndProcess = QtWidgets.QPushButton(self.centralwidget)
-        self.btnEndProcess.setGeometry(QtCore.QRect(531, 520, 131, 21))
+        self.btnEndProcess.setGeometry(QtCore.QRect(550, 780, 161, 31))
         self.btnEndProcess.clicked.connect(self.endProcess)
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(0, 105, 92))
@@ -360,18 +310,16 @@ class Ui_autoWindow(object):
 "    padding-right: 5px;\n"
 "}")
         self.btnEndProcess.setObjectName("btnEndProcess")
+
+
         self.line_4 = QtWidgets.QFrame(self.centralwidget)
-        self.line_4.setGeometry(QtCore.QRect(500, 200, 20, 371))
+        self.line_4.setGeometry(QtCore.QRect(510, 200, 20, 621))
         self.line_4.setFrameShape(QtWidgets.QFrame.VLine)
         self.line_4.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_4.setObjectName("line_4")
-        self.verticalScrollBar = QtWidgets.QScrollBar(self.centralwidget)
-        self.verticalScrollBar.setGeometry(QtCore.QRect(641, 310, 20, 201))
-        self.verticalScrollBar.setOrientation(QtCore.Qt.Vertical)
-        self.verticalScrollBar.setObjectName("verticalScrollBar")
         self.btnChooseCamera = QtWidgets.QPushButton(self.centralwidget)
         self.btnChooseCamera.setEnabled(True)
-        self.btnChooseCamera.setGeometry(QtCore.QRect(400, 150, 141, 21))
+        self.btnChooseCamera.setGeometry(QtCore.QRect(400, 160, 141, 21))
         font = QtGui.QFont()
         font.setFamily("Open Sans")
         font.setPointSize(10)
@@ -404,7 +352,7 @@ class Ui_autoWindow(object):
 "}")
         self.btnChooseCamera.setObjectName("btnChooseCamera")
         self.progressBarSnaps = QtWidgets.QProgressBar(self.centralwidget)
-        self.progressBarSnaps.setGeometry(QtCore.QRect(530, 280, 131, 16))
+        self.progressBarSnaps.setGeometry(QtCore.QRect(550, 290, 131, 16))
         font = QtGui.QFont()
         font.setPointSize(9)
         self.progressBarSnaps.setFont(font)
@@ -425,7 +373,7 @@ class Ui_autoWindow(object):
         self.progressBarSnaps.setProperty("value", 0)
         self.progressBarSnaps.setObjectName("progressBarSnaps")
         self.graphicsViewSavedSnaps = QtWidgets.QGraphicsView(self.centralwidget)
-        self.graphicsViewSavedSnaps.setGeometry(QtCore.QRect(530, 310, 131, 201))
+        self.graphicsViewSavedSnaps.setGeometry(QtCore.QRect(550, 330, 161, 341))
         self.graphicsViewSavedSnaps.setStyleSheet("QGraphicsView\n"
 "{\n"
 "    color: #fff;\n"
@@ -462,7 +410,7 @@ class Ui_autoWindow(object):
         self.label.setObjectName("label")
         self.btnSaveSnaps = QtWidgets.QPushButton(self.centralwidget)
         self.btnSaveSnaps.setEnabled(True)
-        self.btnSaveSnaps.setGeometry(QtCore.QRect(370, 520, 121, 21))
+        self.btnSaveSnaps.setGeometry(QtCore.QRect(210, 790, 121, 21))
         font = QtGui.QFont()
         font.setFamily("Open Sans")
         font.setPointSize(10)
@@ -495,20 +443,92 @@ class Ui_autoWindow(object):
 "}")
         self.btnSaveSnaps.setObjectName("btnSaveSnaps")
         self.btnSaveSnaps.clicked.connect(self.saveImage)
-        self.lblTubePosition = QtWidgets.QLabel(self.centralwidget)
-        self.lblTubePosition.setGeometry(QtCore.QRect(190, 210, 130, 31))
+        self.lblLoadImage = QtWidgets.QLabel(self.centralwidget)
+        self.lblLoadImage.setGeometry(QtCore.QRect(40, 300, 428, 484))
+        self.lblLoadImage.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.lblLoadImage.setText("")
+        self.lblLoadImage.setObjectName("lblLoadImage")
+        self.lblLandmark = QtWidgets.QLabel(self.centralwidget)
+        self.lblLandmark.setGeometry(QtCore.QRect(40, 210, 161, 31))
         font = QtGui.QFont()
         font.setFamily("Open Sans")
-        font.setPointSize(10)
+        font.setPointSize(13)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.lblLandmark.setFont(font)
+        self.lblLandmark.setObjectName("lblLandmark")
+        self.lblNavigationTopic = QtWidgets.QLabel(self.centralwidget)
+        self.lblNavigationTopic.setGeometry(QtCore.QRect(40, 250, 91, 31))
+        font = QtGui.QFont()
+        font.setFamily("Open Sans")
+        font.setPointSize(13)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.lblNavigationTopic.setFont(font)
+        self.lblNavigationTopic.setObjectName("lblNavigationTopic")
+        self.lblTubePosition = QtWidgets.QLabel(self.centralwidget)
+        self.lblTubePosition.setGeometry(QtCore.QRect(210, 210, 191, 31))
+        font = QtGui.QFont()
+        font.setFamily("Open Sans")
+        font.setPointSize(15)
         font.setBold(True)
         font.setItalic(False)
         font.setWeight(75)
         self.lblTubePosition.setFont(font)
+        self.lblTubePosition.setText("")
         self.lblTubePosition.setObjectName("lblTubePosition")
-        self.verticalScrollBarSnaps = QtWidgets.QScrollBar(self.centralwidget)
-        self.verticalScrollBarSnaps.setGeometry(QtCore.QRect(650, 310, 20, 201))
-        self.verticalScrollBarSnaps.setOrientation(QtCore.Qt.Vertical)
-        self.verticalScrollBarSnaps.setObjectName("verticalScrollBarSnaps")
+        self.lblNavigation = QtWidgets.QLabel(self.centralwidget)
+        self.lblNavigation.setGeometry(QtCore.QRect(140, 250, 361, 31))
+        font = QtGui.QFont()
+        font.setFamily("Open Sans")
+        font.setPointSize(15)
+        font.setBold(True)
+        font.setItalic(False)
+        font.setWeight(75)
+        self.lblNavigation.setFont(font)
+        self.lblNavigation.setText("")
+        self.lblNavigation.setObjectName("lblNavigation")
+        self.btnOpenFolder = QtWidgets.QPushButton(self.centralwidget)
+        self.btnOpenFolder.setEnabled(True)
+        self.btnOpenFolder.setGeometry(QtCore.QRect(550, 680, 161, 31))
+        font = QtGui.QFont()
+        font.setFamily("Open Sans")
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setWeight(75)
+        self.btnOpenFolder.setFont(font)
+        self.btnOpenFolder.setStyleSheet("QPushButton\n"
+                                         "{\n"
+                                         "    color: #fff;\n"
+                                         "    background-color: #00796B;\n"
+                                         "    border-width:1px;\n"
+                                         "    border-color: #00695C;\n"
+                                         "    border-style: solid;\n"
+                                         "    border-radius: 8px;\n"
+                                         "    padding: 2px;\n"
+                                         "    padding-left: 5px;\n"
+                                         "    padding-right: 5px;\n"
+                                         "}\n"
+                                         "\n"
+                                         "\n"
+                                         "\n"
+                                         "QPushButton:hover\n"
+                                         "{\n"
+                                         "    background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #018175, stop: 0.1 #018175, stop: 0.5 #018175, stop: 0.9 #018175, stop: 1 #018175);\n"
+                                         "}\n"
+                                         "\n"
+                                         "QPushButton:pressed\n"
+                                         "{\n"
+                                         "   background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #02695F, stop: 0.1 #02695F, stop: 0.5 #02695F, stop: 0.9 #02695F, stop: 1 #02695F);\n"
+                                         "}")
+        self.btnOpenFolder.setObjectName("btnOpenFolder")
+        self.btnOpenFolder.clicked.connect(self.openSanpsFolder)
+        self.verticalScrollBar_2 = QtWidgets.QScrollBar(self.centralwidget)
+        self.verticalScrollBar_2.setGeometry(QtCore.QRect(695, 330, 21, 341))
+        self.verticalScrollBar_2.setOrientation(QtCore.Qt.Vertical)
+        self.verticalScrollBar_2.setObjectName("verticalScrollBar_2")
         autoWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(autoWindow)
         self.statusbar.setObjectName("statusbar")
@@ -521,8 +541,6 @@ class Ui_autoWindow(object):
         _translate = QtCore.QCoreApplication.translate
         autoWindow.setWindowTitle(_translate("autoWindow", "Automatic Intubation"))
         self.label_4.setText(_translate("autoWindow", "CameraResource 001"))
-        self.btnPause.setText(_translate("autoWindow", "Pause"))
-        self.label_5.setText(_translate("autoWindow", "Tube x,y Movement:"))
         self.btnCancel.setText(_translate("autoWindow", "Cancel"))
         self.label_7.setText(_translate("autoWindow", "Genarating the images"))
         self.label_8.setText(_translate("autoWindow", "All Right Reserved"))
@@ -533,16 +551,18 @@ class Ui_autoWindow(object):
         self.label_2.setText(_translate("autoWindow", "CHOOSE THE VIDEO CAMERA RESOURCE HERE"))
         self.label.setText(_translate("autoWindow", "Configuring the camera"))
         self.btnSaveSnaps.setText(_translate("autoWindow", "Save Snapshot"))
-        self.lblTubePosition.setText(_translate("autoWindow", ""))
+        self.lblLandmark.setText(_translate("autoWindow", "Anatomical Location :"))
+        self.lblNavigationTopic.setText(_translate("autoWindow", "Navigation :"))
+        self.btnOpenFolder.setText(_translate("manualWindow", "Open Folder"))
 
     def saveImageProgrezz(self):
         self.completed = 0
         while self.completed < 100:
             self.completed += 0.0001
-            self.progressBarSnapshots.setValue(self.completed)
+            self.progressBarSnaps.setValue(self.completed)
 
     def saveImage(self):
-        save_name="E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/Snapshots/"+str(time.time())+".jpg"
+        save_name="D:/Academic/4th Year/1st Semester/Project SCS- 4123/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/Snapshot/"+str(time.time())+".jpg"
         save_img = cv2.cvtColor(self.display_img, cv2.COLOR_BGR2RGB)
         cv2.imwrite(save_name,save_img)
 
@@ -559,7 +579,7 @@ class Ui_autoWindow(object):
         item = QGraphicsPixmapItem(QPixmap(save_qImg))
         self.scene.addItem(item)
         #print(self.scene)
-        self.viewSavedSnaps.setScene(self.scene)
+        self.graphicsViewSavedSnaps.setScene(self.scene)
         self.saveImageProgrezz()
 
     def startIntubation(self):
@@ -570,7 +590,7 @@ class Ui_autoWindow(object):
             print("Process is being started...")
             self.thread2 = Thread(target=self.runvideo, args=())
             self.thread2.start()
-            self.run.video_file = "E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sam2.mp4"
+            self.run.video_file = "D:/Academic/4th Year/1st Semester/Project SCS- 4123/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/sam2.mp4"
 
             time.sleep(1)
 
@@ -621,6 +641,10 @@ class Ui_autoWindow(object):
                     pixmap = QPixmap(qImg)
                     self.lblLoadImage.setPixmap(pixmap)
                     time.sleep(0.1)
+    def openSanpsFolder(self):
+        path = "D:/Academic/4th Year/1st Semester/Project SCS- 4123/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/Snapshot"
+        path = os.path.realpath(path)
+        os.startfile(path)
 
     def endProcess(self):
 

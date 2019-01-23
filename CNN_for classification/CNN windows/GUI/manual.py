@@ -679,7 +679,7 @@ class Ui_manualWindow(object):
         self.progrezz()
 
     def saveImage(self):
-        save_name="E:/Degree/4th year 1st semester/Project/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/Snapshots/"+str(time.time())+".jpg"
+        save_name="D:/Academic/4th Year/1st Semester/Project SCS- 4123/Endotracheal-Intubation-Automation/CNN_for classification/CNN windows/Snapshot/"+str(time.time())+".jpg"
         save_img = cv2.cvtColor(self.display_img, cv2.COLOR_BGR2RGB)
         cv2.imwrite(save_name,save_img)
 

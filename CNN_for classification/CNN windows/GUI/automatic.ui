@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>701</width>
-    <height>611</height>
+    <width>730</width>
+    <height>863</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,84 +36,13 @@
      <string>CameraResource 001</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="btnPause">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>290</x>
-      <y>520</y>
-      <width>71</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Open Sans</family>
-      <pointsize>10</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton
-{
-    color: #fff;
-    background-color: #00796B;
-    border-width:1px;
-    border-color: #00695C;
-    border-style: solid;
-    border-radius: 8px;
-    padding: 2px;
-    padding-left: 5px;
-    padding-right: 5px;
-}
-
-
-
-QPushButton:hover
-{
-    background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #018175, stop: 0.1 #018175, stop: 0.5 #018175, stop: 0.9 #018175, stop: 1 #018175);
-}
-
-QPushButton:pressed
-{
-   background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #02695F, stop: 0.1 #02695F, stop: 0.5 #02695F, stop: 0.9 #02695F, stop: 1 #02695F);
-}</string>
-    </property>
-    <property name="text">
-     <string>Pause</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_5">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>210</y>
-      <width>141</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Open Sans</family>
-      <pointsize>10</pointsize>
-      <weight>50</weight>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>Current Tube Position:</string>
-    </property>
-   </widget>
    <widget class="QGraphicsView" name="viewTubeLocation">
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>240</y>
-      <width>451</width>
-      <height>271</height>
+      <y>300</y>
+      <width>431</width>
+      <height>481</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -133,7 +62,7 @@ QPushButton:pressed
     <property name="geometry">
      <rect>
       <x>560</x>
-      <y>150</y>
+      <y>160</y>
       <width>102</width>
       <height>21</height>
      </rect>
@@ -336,8 +265,8 @@ QPushButton:pressed
    <widget class="QLabel" name="label_7">
     <property name="geometry">
      <rect>
-      <x>530</x>
-      <y>250</y>
+      <x>550</x>
+      <y>260</y>
       <width>141</width>
       <height>31</height>
      </rect>
@@ -358,8 +287,8 @@ QPushButton:pressed
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>550</y>
-      <width>701</width>
+      <y>800</y>
+      <width>841</width>
       <height>41</height>
      </rect>
     </property>
@@ -372,7 +301,7 @@ QPushButton:pressed
      <rect>
       <x>0</x>
       <y>190</y>
-      <width>701</width>
+      <width>771</width>
       <height>21</height>
      </rect>
     </property>
@@ -384,8 +313,8 @@ QPushButton:pressed
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>570</y>
-      <width>701</width>
+      <y>820</y>
+      <width>841</width>
       <height>21</height>
      </rect>
     </property>
@@ -418,7 +347,7 @@ QPushButton:pressed
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>701</width>
+      <width>851</width>
       <height>51</height>
      </rect>
     </property>
@@ -452,9 +381,9 @@ QPushButton:pressed
     </property>
     <property name="geometry">
      <rect>
-      <x>530</x>
+      <x>550</x>
       <y>220</y>
-      <width>131</width>
+      <width>161</width>
       <height>31</height>
      </rect>
     </property>
@@ -500,7 +429,7 @@ QPushButton:pressed
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>150</y>
+      <y>160</y>
       <width>341</width>
       <height>20</height>
      </rect>
@@ -527,16 +456,16 @@ QProgressBar::chunk {
  }</string>
     </property>
     <property name="value">
-     <number>24</number>
+     <number>0</number>
     </property>
    </widget>
    <widget class="QPushButton" name="btnEndProcess">
     <property name="geometry">
      <rect>
-      <x>531</x>
-      <y>520</y>
-      <width>131</width>
-      <height>21</height>
+      <x>550</x>
+      <y>780</y>
+      <width>161</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="palette">
@@ -737,23 +666,10 @@ QProgressBar::chunk {
    <widget class="Line" name="line_4">
     <property name="geometry">
      <rect>
-      <x>500</x>
+      <x>510</x>
       <y>200</y>
       <width>20</width>
-      <height>371</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Vertical</enum>
-    </property>
-   </widget>
-   <widget class="QScrollBar" name="verticalScrollBar">
-    <property name="geometry">
-     <rect>
-      <x>641</x>
-      <y>310</y>
-      <width>20</width>
-      <height>201</height>
+      <height>621</height>
      </rect>
     </property>
     <property name="orientation">
@@ -767,7 +683,7 @@ QProgressBar::chunk {
     <property name="geometry">
      <rect>
       <x>400</x>
-      <y>150</y>
+      <y>160</y>
       <width>141</width>
       <height>21</height>
      </rect>
@@ -813,8 +729,8 @@ QPushButton:pressed
    <widget class="QProgressBar" name="progressBarSnaps">
     <property name="geometry">
      <rect>
-      <x>530</x>
-      <y>280</y>
+      <x>550</x>
+      <y>290</y>
       <width>131</width>
       <height>16</height>
      </rect>
@@ -841,16 +757,16 @@ QProgressBar::chunk {
  }</string>
     </property>
     <property name="value">
-     <number>24</number>
+     <number>0</number>
     </property>
    </widget>
    <widget class="QGraphicsView" name="graphicsViewSavedSnaps">
     <property name="geometry">
      <rect>
-      <x>530</x>
-      <y>310</y>
-      <width>131</width>
-      <height>201</height>
+      <x>550</x>
+      <y>330</y>
+      <width>161</width>
+      <height>341</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -921,8 +837,8 @@ QProgressBar::chunk {
     </property>
     <property name="geometry">
      <rect>
-      <x>370</x>
-      <y>520</y>
+      <x>210</x>
+      <y>790</y>
       <width>121</width>
       <height>21</height>
      </rect>
@@ -965,35 +881,117 @@ QPushButton:pressed
      <string>Save Snapshot</string>
     </property>
    </widget>
-   <widget class="QLabel" name="lblTubePosition">
+   <widget class="QLabel" name="lblLoadImage">
     <property name="geometry">
      <rect>
-      <x>190</x>
+      <x>40</x>
+      <y>300</y>
+      <width>431</width>
+      <height>481</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblLandmark">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
       <y>210</y>
-      <width>130</width>
+      <width>161</width>
       <height>31</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Open Sans</family>
-      <pointsize>10</pointsize>
+      <pointsize>13</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Anatomical Location :</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblNavigationTopic">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>250</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Open Sans</family>
+      <pointsize>13</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Navigation :</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblTubePosition">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>210</y>
+      <width>191</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Open Sans</family>
+      <pointsize>15</pointsize>
       <weight>75</weight>
       <italic>false</italic>
       <bold>true</bold>
      </font>
     </property>
     <property name="text">
-     <string>Position</string>
+     <string/>
     </property>
    </widget>
-   <widget class="QScrollBar" name="verticalScrollBarSnaps">
+   <widget class="QLabel" name="lblNavigation">
     <property name="geometry">
      <rect>
-      <x>650</x>
-      <y>310</y>
-      <width>20</width>
-      <height>201</height>
+      <x>140</x>
+      <y>250</y>
+      <width>361</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Open Sans</family>
+      <pointsize>15</pointsize>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QScrollBar" name="verticalScrollBar_2">
+    <property name="geometry">
+     <rect>
+      <x>695</x>
+      <y>330</y>
+      <width>21</width>
+      <height>341</height>
      </rect>
     </property>
     <property name="orientation">
